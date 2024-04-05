@@ -5,6 +5,7 @@ import { router } from "../router/Routes";
 const sleep = () => new Promise((resolve) => setTimeout(resolve, 300));
 
 axios.defaults.baseURL = "http://localhost:5000/api/";
+axios.defaults.withCredentials = true;
 
 // helper
 const responseBody = (response: AxiosResponse) => response.data;

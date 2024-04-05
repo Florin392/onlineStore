@@ -14,6 +14,7 @@ import { Product } from "../../app/models/products";
 import { currencyFormat } from "../../app/helpers/utils";
 import agent from "../../app/api/agent";
 import NotFound from "../../app/errors/NotFound";
+import LoadingPage from "../../app/layout/LoadingComponent";
 
 export default function ProductDetails() {
   const { id } = useParams<{ id: string }>();
@@ -28,7 +29,7 @@ export default function ProductDetails() {
         .finally(() => setLoading(false));
   }, [id]);
 
-  if (loading) return <h3>Loading...</h3>;
+  if (loading) return <LoadingPage message="Loading product..."/>;
 
   if (!product) return <NotFound />;
 

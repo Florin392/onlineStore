@@ -11,11 +11,29 @@ import {
 import { Product } from "../../app/models/products";
 import { currencyFormat } from "../../app/helpers/utils";
 import { Link } from "react-router-dom";
+import { useCallback, useState } from "react";
+import agent from "../../app/api/agent";
+import { LoadingButton } from "@mui/lab";
+import { useStoreContext } from "../../app/context/StoreContext";
 interface Props {
   product: Product;
 }
 
 export default function ProductCard({ product }: Props) {
+  const [loading, setLoading] = useState(false);
+  const { setBasket } = useStoreContext();
+
+  const handleAddItem = useCallback(
+    (productId: number) => {
+      setLoading(true);
+      agent.Basket.addItem(productId)
+        .then((basket) => setBasket(basket))
+        .catch((error) => console.log(error))
+        .finally(() => setLoading(false));
+    },
+    [setBasket]
+  );
+
   return (
     <Card>
       <CardHeader
@@ -47,7 +65,13 @@ export default function ProductCard({ product }: Props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Add to cart</Button>
+        <LoadingButton
+          loading={loading}
+          onClick={() => handleAddItem(product.id)}
+          size="small"
+        >
+          Add to cart
+        </LoadingButton>
         <Button component={Link} to={`/catalog/${product.id}`} size="small">
           View
         </Button>

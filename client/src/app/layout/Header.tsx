@@ -11,7 +11,8 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
-import { useStoreContext } from "../context/StoreContext";
+import { useAppSelector } from "../hooks/useAppSelector";
+import { basketSelector } from "../../state/basket/selectors";
 
 interface Props {
   darkMode: boolean;
@@ -42,7 +43,7 @@ const navStyles = {
 };
 
 export default function Header({ darkMode, handleThemeChange }: Props) {
-  const { basket } = useStoreContext();
+  const basket = useAppSelector(basketSelector);
 
   // calculate all quantity and update basket icon
   const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0);

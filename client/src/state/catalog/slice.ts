@@ -1,5 +1,9 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
-import { fetchProductAsync, fetchProductsAsync } from "./actions";
+import {
+  fetchFiltersAsync,
+  fetchProductAsync,
+  fetchProductsAsync,
+} from "./actions";
 import { Product } from "../../app/models/products";
 import { RootState } from "../store";
 
@@ -9,7 +13,10 @@ export const catalogSlice = createSlice({
   name: "catalog",
   initialState: productsAdapter.getInitialState({
     productsLoaded: false,
+    filtersLoaded: false,
     status: "idle",
+    brands: [],
+    types: [],
   }),
   reducers: {},
   extraReducers: (builder) => {
@@ -22,7 +29,7 @@ export const catalogSlice = createSlice({
       state.status = "idle";
       state.productsLoaded = true;
     });
-    builder.addCase(fetchProductsAsync.rejected, (state,action) => {
+    builder.addCase(fetchProductsAsync.rejected, (state, action) => {
       console.log(action.payload);
       state.status = "idle";
     });
@@ -38,6 +45,21 @@ export const catalogSlice = createSlice({
     builder.addCase(fetchProductAsync.rejected, (state, action) => {
       console.log(action.payload);
       state.status = "idle";
+    });
+
+    // fetchFiltersAsync
+    builder.addCase(fetchFiltersAsync.pending, (state) => {
+      state.status = "pendingFetchFilters";
+    });
+    builder.addCase(fetchFiltersAsync.fulfilled, (state, action) => {
+      state.brands = action.payload.brands;
+      state.types = action.payload.types;
+      state.filtersLoaded = true;
+      state.status = "idle";
+    });
+    builder.addCase(fetchFiltersAsync.rejected, (state, action) => {
+      state.status = "idle";
+      console.log(action.payload);
     });
   },
 });

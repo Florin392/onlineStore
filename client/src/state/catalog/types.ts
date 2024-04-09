@@ -1,3 +1,4 @@
+import { MetaData } from "../../app/models/pagination";
 import { ProductParams } from "../../app/models/products";
 
 export interface CatalogState {
@@ -7,4 +8,5 @@ export interface CatalogState {
   brands: string[];
   types: string[];
   productParams: ProductParams;
+  metaData: MetaData | null;
 }

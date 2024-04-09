@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import agent from "../../app/api/agent";
 import { Product, ProductParams } from "../../app/models/products";
 import { RootState } from "@reduxjs/toolkit/query";
+import { setMetaData } from "./slice";
 
 function getAxiosParams(productParams: ProductParams) {
   const params = new URLSearchParams();
@@ -10,9 +11,9 @@ function getAxiosParams(productParams: ProductParams) {
   params.append("orderBy", productParams.orderBy);
   if (productParams.searchTerm)
     params.append("searchTerm", productParams.searchTerm);
-  if (productParams.brands)
+  if (productParams.brands?.length > 0)
     params.append("brands", productParams.brands.toString());
-  if (productParams.types)
+  if (productParams.types.length > 0)
     params.append("types", productParams.types.toString());
 
   return params;
@@ -25,7 +26,9 @@ export const fetchProductsAsync = createAsyncThunk<
 >("catalog/fetchProductsAsync", async (_, thunkAPI) => {
   const params = getAxiosParams(thunkAPI.getState().catalog.productParams);
   try {
-    return await agent.Catalog.list(params);
+    const response = await agent.Catalog.list(params);
+    thunkAPI.dispatch(setMetaData(response.metaData));
+    return response.items;
   } catch (error: any) {
     return thunkAPI.rejectWithValue({ error: error.data });
   }

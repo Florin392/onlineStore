@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { User } from "../../app/models/users";
 import { FieldValues } from "react-hook-form";
 import agent from "../../app/api/agent";
+import { setUser } from "./slice";
 
 export const signInUserAsync = createAsyncThunk<User, FieldValues>(
   "account/signInUser",
@@ -20,6 +21,7 @@ export const signInUserAsync = createAsyncThunk<User, FieldValues>(
 export const fetchCurrentUserAsync = createAsyncThunk<User>(
   "account/fetchCurrentUser",
   async (_, thunkAPI) => {
+    thunkAPI.dispatch(setUser(JSON.parse(localStorage.getItem("user")!)));
     try {
       const user = await agent.Account.currentUser();
       //   dispatchWithRetry
@@ -30,5 +32,11 @@ export const fetchCurrentUserAsync = createAsyncThunk<User>(
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.data });
     }
+  },
+  {
+    condition: () => {
+      if (!localStorage.getItem("user")) return false;
+      // if no user key in localstorage, no call in network
+    },
   }
 );

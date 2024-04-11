@@ -6,24 +6,52 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Paper } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
 import { useCallback } from "react";
 import { LoadingButton } from "@mui/lab";
 import agent from "../../app/api/agent";
+import { toast } from "react-toastify";
 
 export default function Register() {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
+    setError,
     formState: { isSubmitting, isValid, errors },
   } = useForm({
     mode: "onTouched",
   });
 
-  const submitForm = useCallback(async (data: FieldValues) => {
-    agent.Account.register(data);
-  }, []);
+  const handleApiErrors = useCallback(
+    (errors: any) => {
+      if (errors) {
+        errors.forEach((error: string) => {
+          if (error.includes("Password")) {
+            setError("password", { message: error });
+          } else if (error.includes("Email")) {
+            setError("email", { message: error });
+          } else if (error.includes("Username")) {
+            setError("username", { message: error });
+          }
+        });
+      }
+    },
+    [setError]
+  );
+
+  const submitForm = useCallback(
+    async (data: FieldValues) => {
+      agent.Account.register(data)
+        .then(() => {
+          toast.success("Registration successful - you can now login");
+          navigate("/login");
+        })
+        .catch((error) => handleApiErrors(error));
+    },
+    [handleApiErrors, navigate]
+  );
 
   return (
     <Container
@@ -61,7 +89,13 @@ export default function Register() {
           margin="normal"
           fullWidth
           label="Email"
-          {...register("email", { required: "Email is required" })}
+          {...register("email", {
+            required: "Email is required",
+            pattern: {
+              value: /^\w+[\w-.]*@\w+((-\w+)|(\w*))\.[a-z]{2,3}$/,
+              message: "Not a valid email adress",
+            },
+          })}
           error={!!errors.email}
           helperText={errors?.email?.message as string}
         />
@@ -70,11 +104,18 @@ export default function Register() {
           fullWidth
           label="Password"
           type="password"
-          {...register("password", { required: "Password is required" })}
+          {...register("password", {
+            required: "Password is required",
+            pattern: {
+              value:
+                /(?=^.{6,10}$)(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&amp;*()_+}{&quot;:;'?/&gt;.&lt;,])(?!.*\s).*$/,
+              message:
+                "It expects atleast 1 small-case letter, 1 Capital letter, 1 digit, 1 special character and the length should be between 6-10 characters.",
+            },
+          })}
           error={!!errors.password}
           helperText={errors?.password?.message as string}
         />
-
         <LoadingButton
           loading={isSubmitting}
           disabled={!isValid}

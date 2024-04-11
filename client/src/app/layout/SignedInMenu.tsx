@@ -7,18 +7,27 @@ import { useAppDispatch } from "../hooks/useAppDispatch";
 import { useAppSelector } from "../hooks/useAppSelector";
 import { Link } from "react-router-dom";
 import { signOut } from "../../state/account/slice";
+import { clearBasket } from "../../state/basket/slice";
+import { useCallback } from "react";
 
 export default function SignedInMenu() {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.account);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+
+  const handleClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
+  }, []);
+  
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, []);
+
+  const handleLogOut = useCallback(() => {
+    dispatch(clearBasket());
+    dispatch(signOut());
+  }, [dispatch]);
 
   return (
     <>
@@ -35,13 +44,7 @@ export default function SignedInMenu() {
         <MenuItem component={Link} to="/orders">
           My orders
         </MenuItem>
-        <MenuItem
-          onClick={() => {
-            dispatch(signOut());
-          }}
-        >
-          Logout
-        </MenuItem>
+        <MenuItem onClick={handleLogOut}>Logout</MenuItem>
       </Menu>
     </>
   );

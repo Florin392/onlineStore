@@ -3,14 +3,19 @@ import { User } from "../../app/models/users";
 import { FieldValues } from "react-hook-form";
 import agent from "../../app/api/agent";
 import { setUser } from "./slice";
+import { setBasket } from "../basket/slice";
 
 export const signInUserAsync = createAsyncThunk<User, FieldValues>(
   "account/signInUser",
   async (data, thunkAPI) => {
     try {
-      const user = await agent.Account.login(data);
-      //   dispatchWithRetry
+      const userDto = await agent.Account.login(data);
+      const { basket, ...user } = userDto;
+      // set the basket and ...user (user,token) into {user}
+      if (basket) thunkAPI.dispatch(setBasket(basket));
+      // use the basket to update the state in Redux store
       localStorage.setItem("user", JSON.stringify(user));
+      //   dispatchWithRetry
       return user;
     } catch (error: any) {
       return thunkAPI.rejectWithValue({ error: error.data });
@@ -23,7 +28,9 @@ export const fetchCurrentUserAsync = createAsyncThunk<User>(
   async (_, thunkAPI) => {
     thunkAPI.dispatch(setUser(JSON.parse(localStorage.getItem("user")!)));
     try {
-      const user = await agent.Account.currentUser();
+      const userDto = await agent.Account.currentUser();
+      const { basket, ...user } = userDto;
+      if (basket) thunkAPI.dispatch(setBasket(basket));
       //   dispatchWithRetry
       //   overwrite the user in local storage and
       // replace it with updated token get it from api

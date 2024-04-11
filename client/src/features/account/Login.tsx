@@ -26,8 +26,12 @@ export default function Login() {
 
   const submitForm = useCallback(
     async (data: FieldValues) => {
-      await dispatch(signInUserAsync(data));
-      navigate("/catalog");
+      try {
+        await dispatch(signInUserAsync(data));
+        navigate("/catalog");
+      } catch (error) {
+        console.log(error);
+      }
     },
     [dispatch, navigate]
   );

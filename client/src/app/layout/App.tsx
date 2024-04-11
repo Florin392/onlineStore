@@ -9,11 +9,10 @@ import {
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { getCookie } from "../helpers/utils";
-import agent from "../api/agent";
 import LoadingPage from "./LoadingComponent";
 import { useAppDispatch } from "../hooks/useAppDispatch";
-import { setBasket } from "../../state/basket/slice";
+import { fetchCurrentUserAsync } from "../../state/account/actions";
+import { fetchBasketAsync } from "../../state/basket/actions";
 
 export default function App() {
   const dispatch = useAppDispatch();
@@ -29,17 +28,18 @@ export default function App() {
     },
   });
 
-  useEffect(() => {
-    const buyerId = getCookie("buyerId");
-    if (buyerId) {
-      agent.Basket.get()
-        .then((basket) => dispatch(setBasket(basket)))
-        .catch((error) => console.log(error))
-        .finally(() => setLoading(false));
-    } else {
-      setLoading(false);
+  const initApp = useCallback(async () => {
+    try {
+      await dispatch(fetchCurrentUserAsync());
+      await dispatch(fetchBasketAsync());
+    } catch (error) {
+      console.log(error);
     }
   }, [dispatch]);
+
+  useEffect(() => {
+    initApp().then(() => setLoading(false));
+  }, [initApp]);
 
   const handleThemeChange = useCallback(() => {
     setDarkMode(!darkMode);

@@ -1,6 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { BasketState } from "./types";
-import { addBasketItemAsync, removeBasketItemAsync } from "./actions";
+import {
+  addBasketItemAsync,
+  fetchBasketAsync,
+  removeBasketItemAsync,
+} from "./actions";
 
 const initialState: BasketState = {
   basket: null,
@@ -14,19 +18,14 @@ export const basketSlice = createSlice({
     setBasket: (state, action) => {
       state.basket = action.payload;
     },
+    clearBasket: (state) => {
+      state.basket = null;
+    },
   },
   extraReducers: (builder) => {
     // addBasketItemAsync
     builder.addCase(addBasketItemAsync.pending, (state, action) => {
       state.status = "pendingAddItem" + action.meta.arg.productId;
-    });
-    builder.addCase(addBasketItemAsync.fulfilled, (state, action) => {
-      state.basket = action.payload;
-      state.status = "idle";
-    });
-    builder.addCase(addBasketItemAsync.rejected, (state, action) => {
-      console.log(action.payload);
-      state.status = "idle";
     });
 
     // removeBasketItemAsync
@@ -49,7 +48,22 @@ export const basketSlice = createSlice({
       console.log(action.payload);
       state.status = "idle";
     });
+
+    builder.addMatcher(
+      isAnyOf(addBasketItemAsync.fulfilled, fetchBasketAsync.fulfilled),
+      (state, action) => {
+        state.basket = action.payload;
+        state.status = "idle";
+      }
+    );
+    builder.addMatcher(
+      isAnyOf(addBasketItemAsync.rejected, fetchBasketAsync.rejected),
+      (state, action) => {
+        console.log(action.payload);
+        state.status = "idle";
+      }
+    );
   },
 });
 
-export const { setBasket } = basketSlice.actions;
+export const { setBasket, clearBasket } = basketSlice.actions;

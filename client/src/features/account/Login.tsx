@@ -6,7 +6,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { Paper } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FieldValues, useForm } from "react-hook-form";
 import { useCallback } from "react";
 import { LoadingButton } from "@mui/lab";
@@ -14,6 +14,7 @@ import { useAppDispatch } from "../../app/hooks/useAppDispatch";
 import { signInUserAsync } from "../../state/account/actions";
 
 export default function Login() {
+  const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const {
@@ -28,12 +29,12 @@ export default function Login() {
     async (data: FieldValues) => {
       try {
         await dispatch(signInUserAsync(data));
-        navigate("/catalog");
+        navigate(location.state?.from || "/catalog");
       } catch (error) {
         console.log(error);
       }
     },
-    [dispatch, navigate]
+    [dispatch, navigate, location]
   );
 
   return (

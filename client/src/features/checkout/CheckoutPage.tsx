@@ -18,21 +18,9 @@ import agent from "../../app/api/agent";
 import { clearBasket } from "../../state/basket/slice";
 import { useAppDispatch } from "../../app/hooks/useAppDispatch";
 import { LoadingButton } from "@mui/lab";
+import { StripeElementType } from "@stripe/stripe-js";
 
 const steps = ["Shipping address", "Review your order", "Payment details"];
-
-function getStepContent(step: number) {
-  switch (step) {
-    case 0:
-      return <AddressForm />;
-    case 1:
-      return <Review />;
-    case 2:
-      return <PaymentForm />;
-    default:
-      throw new Error("Unknown step");
-  }
-}
 
 export default function CheckoutPage() {
   const dispatch = useAppDispatch();
@@ -40,11 +28,50 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const currentValidationSchema = validationSchema[activeStep];
+  const [cardState, setCardState] = useState<{
+    elementError: { [key in StripeElementType]?: string };
+  }>({ elementError: {} });
+  const [cardComplete, setCardComplete] = useState<any>({
+    cardNumber: false,
+    cardExpiry: false,
+    cardCvc: false,
+  });
 
+  const onCardInputChange = useCallback(
+    (event: any) => {
+      setCardState({
+        ...cardState,
+        elementError: {
+          ...cardState.elementError,
+          [event.elementType]: event.error?.message,
+        },
+      });
+      setCardComplete({ ...cardComplete, [event.elementType]: event.complete });
+    },
+    [cardState, cardComplete]
+  );
   const methods = useForm({
     mode: "onTouched",
     resolver: yupResolver(currentValidationSchema),
   });
+
+  function getStepContent(step: number) {
+    switch (step) {
+      case 0:
+        return <AddressForm />;
+      case 1:
+        return <Review />;
+      case 2:
+        return (
+          <PaymentForm
+            cardState={cardState}
+            onCardInputChange={onCardInputChange}
+          />
+        );
+      default:
+        throw new Error("Unknown step");
+    }
+  }
 
   useEffect(() => {
     if (!loading) {
@@ -86,6 +113,19 @@ export default function CheckoutPage() {
     setActiveStep(activeStep - 1);
   }, [activeStep]);
 
+  const handleSubmitDisabled = useCallback(() => {
+    if (activeStep === steps.length - 1) {
+      return (
+        !cardComplete.cardCvc ||
+        !cardComplete.cardExpiry ||
+        !cardComplete.cardNumber ||
+        !methods.formState.isValid
+      );
+    } else {
+      return !methods.formState.isValid;
+    }
+  }, [activeStep, cardComplete, methods]);
+
   return (
     <FormProvider {...methods}>
       <Paper
@@ -125,7 +165,7 @@ export default function CheckoutPage() {
                 )}
                 <LoadingButton
                   loading={loading}
-                  disabled={!methods.formState.isValid}
+                  disabled={handleSubmitDisabled()}
                   variant="contained"
                   type="submit"
                   sx={{ mt: 3, ml: 1 }}

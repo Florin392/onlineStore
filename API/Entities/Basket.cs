@@ -8,6 +8,8 @@ namespace API.Entities
         public string BuyerId { get; set; }
         public List<BasketItem> Items { get; set; } = new();
         //create a new list of items when we create a new basket
+        public string PaymentIntentId { get; set; }
+        public string ClientSecret { get; set; }
 
         // meth to create/delete items
         public void AddItem(Product product, int quantity)

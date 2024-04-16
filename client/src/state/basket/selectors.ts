@@ -1,4 +1,4 @@
-import { RootState } from "@reduxjs/toolkit/query";
+import { RootState } from "../store";
 
 export const basketSelector = (state: RootState) => {
   return state.basket.basket;

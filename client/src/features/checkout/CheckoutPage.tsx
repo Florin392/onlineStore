@@ -102,8 +102,13 @@ export default function CheckoutPage() {
       if (!stripe || !elements) return;
       try {
         const cardElement = elements.getElement(CardNumberElement);
+        if (!cardElement) {
+          // Handle the case where cardElement is null
+          return; // Or throw an error, log a message, etc.
+        }
+
         const paymentResult = await stripe.confirmCardPayment(
-          basket?.clientSecret,
+          basket?.clientSecret || "", // Fallback to empty string
           {
             payment_method: {
               card: cardElement,
@@ -126,7 +131,10 @@ export default function CheckoutPage() {
           dispatch(clearBasket());
           setLoading(false);
         } else {
-          setPaymentMessage(paymentResult.error?.message);
+          setPaymentMessage(
+            paymentResult.error?.message ??
+              "An error occurred during payment processing."
+          );
           setPaymentSucceeded(false);
           setLoading(false);
           setActiveStep(activeStep + 1);

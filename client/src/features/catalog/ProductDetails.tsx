@@ -32,7 +32,7 @@ export default function ProductDetails() {
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
   const product = useAppSelector((state) =>
-    productSelectors.selectById(state, id)
+    productSelectors.selectById(state, parseInt(id!))
   );
   const [quantity, setQuantity] = useState(0);
 

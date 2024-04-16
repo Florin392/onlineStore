@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import agent from "../../app/api/agent";
 import { Product, ProductParams } from "../../app/models/products";
-import { RootState } from "@reduxjs/toolkit/query";
 import { setMetaData } from "./slice";
+import { RootState } from "../store";
 
 function getAxiosParams(productParams: ProductParams) {
   const params = new URLSearchParams();

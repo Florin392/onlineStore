@@ -20,10 +20,10 @@ export default function BasketSummary({ subtotal }: Props) {
   if (subtotal === undefined)
     subtotal =
       basket?.items.reduce(
-        (sum, item) => sum + item.quantity * item.price,
+        (sum: number, item: any) => sum + item.quantity * item.price,
         0
       ) ?? 0;
-  const deliveryFee = subtotal > 10000 ? 0 : 500;
+  const deliveryFee = (subtotal ?? 0) > 10000 ? 0 : 500;
 
   return (
     <>
@@ -32,7 +32,9 @@ export default function BasketSummary({ subtotal }: Props) {
           <TableBody>
             <TableRow>
               <TableCell colSpan={2}>Subtotal</TableCell>
-              <TableCell align="right">{currencyFormat(subtotal)}</TableCell>
+              <TableCell align="right">
+                {currencyFormat(subtotal ?? 0)}
+              </TableCell>
             </TableRow>
             <TableRow>
               <TableCell colSpan={2}>Delivery fee*</TableCell>
@@ -41,7 +43,7 @@ export default function BasketSummary({ subtotal }: Props) {
             <TableRow>
               <TableCell colSpan={2}>Total</TableCell>
               <TableCell align="right">
-                {currencyFormat(subtotal + deliveryFee)}
+                {currencyFormat((subtotal ?? 0) + deliveryFee)}
               </TableCell>
             </TableRow>
             <TableRow>

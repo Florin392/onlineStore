@@ -48,7 +48,10 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
   const { user } = useAppSelector((state) => state.account);
 
   // calculate all quantity and update basket icon
-  const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0);
+  const itemCount = basket?.items.reduce(
+    (sum: number, item: any) => sum + item.quantity,
+    0
+  );
 
   return (
     <AppBar position="static">

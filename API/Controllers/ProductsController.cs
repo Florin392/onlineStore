@@ -1,8 +1,11 @@
 using System.Text.Json;
 using API.Data;
+using API.DTOs;
 using API.Entities;
 using API.Extensions;
 using API.RequestHelpers;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,10 +14,12 @@ namespace API.Controllers
 
     public class ProductsController : BaseApiController
     {
+        private readonly IMapper _mapper;
 
         private readonly StoreContext _context;
-        public ProductsController(StoreContext context)
+        public ProductsController(StoreContext context, IMapper mapper)
         {
+            _mapper = mapper;
             _context = context;
         }
 
@@ -37,7 +42,7 @@ namespace API.Controllers
         }
 
 
-        [HttpGet("{id}")] // api/products/3
+        [HttpGet("{id}", Name = "GetProduct")] // api/products/3
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
@@ -55,5 +60,22 @@ namespace API.Controllers
 
             return Ok(new { brands, types });
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<ActionResult<Product>> CreateProduct(CreateProductDto productDto)
+        {
+
+            var product = _mapper.Map<Product>(productDto);
+
+            _context.Products.Add(product);
+
+            var result = await _context.SaveChangesAsync() > 0;
+
+            if (result) return CreatedAtRoute("GetProduct", new { Id = product.Id }, product);
+
+            return BadRequest(new ProblemDetails { Title = "Problem creating new product" });
+        }
+
     }
 }

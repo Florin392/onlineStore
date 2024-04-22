@@ -15,14 +15,54 @@ import { currencyFormat } from "../../app/helpers/utils";
 import useProducts from "../../app/hooks/useProducts";
 import AppPagination from "../../app/components/AppPagination";
 import { useAppDispatch } from "../../app/hooks/useAppDispatch";
-import { setPageNumber } from "../../state/catalog/slice";
+import { removeProduct, setPageNumber } from "../../state/catalog/slice";
+import ProductForm from "./ProductForm";
+import { useCallback, useState } from "react";
+import { Product } from "../../app/models/products";
+import agent from "../../app/api/agent";
+import { LoadingButton } from "@mui/lab";
 
 export default function Inventory() {
   const dispatch = useAppDispatch();
   const { products, metaData } = useProducts();
+  const [editMode, setEditMode] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<Product | undefined>(
+    undefined
+  );
+  const [loading, setLoading] = useState(false);
+  const [target, setTarget] = useState(0);
+
+  const handleSelectProduct = useCallback((product: Product) => {
+    setSelectedProduct(product);
+    setEditMode(true);
+  }, []);
+
+  const handleDeleteProduct = useCallback(
+    (id: number) => {
+      setLoading(true);
+      setTarget(id);
+      agent.Admin.deleteProduct(id)
+        .then(() => dispatch(removeProduct(id)))
+        .catch((error) => console.log(error))
+        .finally(() => setLoading(false));
+    },
+    [setLoading, dispatch]
+  );
+
+  const cancelEdit = useCallback(() => {
+    if (selectedProduct) setSelectedProduct(undefined);
+    setEditMode(false);
+  }, [selectedProduct]);
+
+  const handleEditMode = useCallback(() => {
+    setEditMode(true);
+  }, []);
 
   const handlePageChange = (page: number) =>
     dispatch(setPageNumber({ pageNumber: page }));
+
+  if (editMode)
+    return <ProductForm product={selectedProduct} cancelEdit={cancelEdit} />;
 
   return (
     <>
@@ -30,7 +70,12 @@ export default function Inventory() {
         <Typography sx={{ p: 2 }} variant="h4">
           Inventory
         </Typography>
-        <Button sx={{ m: 2 }} size="large" variant="contained">
+        <Button
+          sx={{ m: 2 }}
+          size="large"
+          variant="contained"
+          onClick={handleEditMode}
+        >
           Create
         </Button>
       </Box>
@@ -73,8 +118,16 @@ export default function Inventory() {
                 <TableCell align="center">{product.brand}</TableCell>
                 <TableCell align="center">{product.quantityInStock}</TableCell>
                 <TableCell align="right">
-                  <Button startIcon={<Edit />} />
-                  <Button startIcon={<Delete />} color="error" />
+                  <Button
+                    onClick={() => handleSelectProduct(product)}
+                    startIcon={<Edit />}
+                  />
+                  <LoadingButton
+                    loading={loading && target === product.id}
+                    startIcon={<Delete />}
+                    color="error"
+                    onClick={() => handleDeleteProduct(product.id)}
+                  />
                 </TableCell>
               </TableRow>
             ))}

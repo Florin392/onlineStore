@@ -2,7 +2,7 @@ name: docker-push
 
 on:
   workflow_dispatch:
-  pull-request:
+  push:
     branches:
       - 'main'
 

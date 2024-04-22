@@ -3,20 +3,15 @@ import { useAppDispatch } from "../../app/hooks/useAppDispatch";
 import { useAppSelector } from "../../app/hooks/useAppSelector";
 import LoadingPage from "../../app/layout/LoadingComponent";
 import {
-  fetchFiltersAsync,
-  fetchProductsAsync,
-} from "../../state/catalog/actions";
-import {
-  productSelectors,
   setPageNumber,
   setProductParams,
 } from "../../state/catalog/slice";
 import ProductList from "./ProductList";
-import { useEffect } from "react";
 import ProductSearch from "./ProductSarch";
 import RadioButtonGroup from "../../app/components/RadioButtonGroup";
 import CheckboxButtons from "../../app/components/CheckboxButtons";
 import AppPagination from "../../app/components/AppPagination";
+import useProducts from "../../app/hooks/useProducts";
 
 const sortOptions = [
   { value: "name", label: "Alphabetical" },
@@ -25,24 +20,11 @@ const sortOptions = [
 ];
 
 export default function Catalog() {
-  const products = useAppSelector(productSelectors.selectAll);
-  const {
-    productsLoaded,
-    filtersLoaded,
-    brands,
-    types,
-    productParams,
-    metaData,
-  } = useAppSelector((state) => state.catalog);
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    if (!productsLoaded) dispatch(fetchProductsAsync());
-  }, [dispatch, productsLoaded]);
+  const { products, brands, filtersLoaded, types, metaData } = useProducts();
 
-  useEffect(() => {
-    if (!filtersLoaded) dispatch(fetchFiltersAsync());
-  }, [dispatch, filtersLoaded]);
+  const { productParams } = useAppSelector((state) => state.catalog);
 
   const handleSortingOrdeBy = (e: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch(setProductParams({ orderBy: e.target.value }));

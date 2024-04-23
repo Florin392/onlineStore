@@ -8,12 +8,12 @@ primary_region = 'mad'
 
 [build]
   image = 'florin392/onlinestore:latest'
+  
+[env]
+  ASPNETCORE_URL="http://+:8080"
   StripeSettings__PublishableKey="pk_test_51P5m7OIK8MifvEPJbFmw4evKE5olsLCjNhgBe3Ne11foLMKLnnDxWVCkvrERxnRVl9a2qB2lfilAg15l3hzgUNdv00bUBrcvCn"
   Cloudinary__CloudName="dphwki2ye"
   Cloudinary__ApiKey="296927463671218"
-
-[env]
-  ASPNETCORE_URL="http://+:8080"
 
 [http_service]
   internal_port = 8080

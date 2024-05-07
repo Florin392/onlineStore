@@ -1,11 +1,11 @@
 import {
   Avatar,
-  Button,
   Card,
   CardActions,
   CardContent,
   CardHeader,
   CardMedia,
+  Grid,
   Typography,
 } from "@mui/material";
 import { Product } from "../../app/models/products";
@@ -31,47 +31,68 @@ export default function ProductCard({ product }: Props) {
   }, [dispatch, product.id]);
 
   return (
-    <Card>
-      <CardHeader
-        avatar={
-          <Avatar sx={{ bgcolor: "secondary.main" }}>
-            {product.name.charAt(0).toLowerCase()}
-          </Avatar>
-        }
-        title={product.name}
-        titleTypographyProps={{
-          sx: { fontWeight: "bold", color: "primary.main" },
-        }}
-      />
-      <CardMedia
-        sx={{
-          height: 140,
-          backgroundSize: "contain",
-          bgcolor: "primary.light",
-        }}
-        image={product.pictureUrl}
-        title={product.name}
-      />
-      <CardContent>
-        <Typography gutterBottom color="secondary" variant="h5">
-          {currencyFormat(product.price)}
-        </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {product.brand} / {product.type}
-        </Typography>
-      </CardContent>
-      <CardActions>
-        <LoadingButton
-          loading={status === "pendingAddItem" + product.id}
-          onClick={handleAddItem}
-          size="small"
+    <Card
+      sx={{
+        maxWidth: 345,
+        height: "100%",
+        "&:hover": {
+          boxShadow: "0 12px 12px rgba(0,0,0,0.4)",
+        },
+      }}
+    >
+      <Grid>
+        <Grid
+          component={Link}
+          to={`/catalog/${product.id}`}
+          sx={{ textDecoration: "none" }}
         >
-          Add to cart
-        </LoadingButton>
-        <Button component={Link} to={`/catalog/${product.id}`} size="small">
-          View
-        </Button>
-      </CardActions>
+          <CardHeader
+            sx={{ height: 100 }}
+            avatar={
+              <Avatar sx={{ bgcolor: "secondary.main" }}>
+                {product.name ? product.name.charAt(0).toUpperCase() : ""}
+              </Avatar>
+            }
+            subheader={
+              <Typography variant="subtitle1" color="primary.main" gutterBottom>
+                {product.name}
+              </Typography>
+            }
+          />
+
+          <CardMedia
+            sx={{
+              height: { xs: 150, md: 250 },
+              backgroundSize: "contain",
+              bgcolor: "primary.light",
+            }}
+            image={product.pictureUrl}
+            title={product.name}
+          />
+          <CardContent>
+            <Grid>
+              <Typography color="text.primary" gutterBottom>
+                {currencyFormat(product.price)}
+              </Typography>
+              <Typography color="text.secondary">
+                {product.brand} / {product.type}
+              </Typography>
+            </Grid>
+          </CardContent>
+        </Grid>
+        <CardActions>
+          <LoadingButton
+            loading={status === "pendingAddItem" + product.id}
+            onClick={handleAddItem}
+            size="small"
+            variant="contained"
+            color="primary"
+            sx={{ mr: 1 }}
+          >
+            Add to Cart
+          </LoadingButton>
+        </CardActions>
+      </Grid>
     </Card>
   );
 }

@@ -9,6 +9,10 @@ import {
   TableCell,
   TableBody,
   Box,
+  Grid,
+  useTheme,
+  useMediaQuery,
+  Typography,
 } from "@mui/material";
 import { currencyFormat } from "../../app/helpers/utils";
 import {
@@ -26,7 +30,12 @@ interface Props {
 export default function BasketTable({ items, isBasket = true }: Props) {
   const dispatch = useAppDispatch();
   const { status } = useAppSelector((state) => state.basket);
-  return (
+
+  const { breakpoints } = useTheme();
+
+  const isDesktop = useMediaQuery(breakpoints.up("md"));
+
+  return isDesktop ? (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }}>
         <TableHead>
@@ -120,5 +129,118 @@ export default function BasketTable({ items, isBasket = true }: Props) {
         </TableBody>
       </Table>
     </TableContainer>
+  ) : (
+    <>
+      <Typography>My basket</Typography>
+      {items.map((item) => (
+        <Grid container>
+          <Grid
+            component={Paper}
+            container
+            justifyContent="space-between"
+            alignItems="center"
+            p={2}
+            mb={2}
+          >
+            {/* Left */}
+            <Grid
+              container
+              xs={2}
+              justifyContent="center"
+              // height={{ xs: 70, sm: 100 }}
+            >
+              <img
+                src={item.pictureUrl}
+                alt={item.name}
+                style={{ height: 70 }}
+              />
+            </Grid>
+
+            <Grid container xs={10} alignSelf="start">
+              <Grid item xs={12}>
+                <Typography pl={2} gutterBottom>
+                  Product name: {item.name}
+                </Typography>
+              </Grid>
+              <Grid container justifyContent="space-between">
+                <Grid>
+                  <Typography pl={2} gutterBottom variant="subtitle2">
+                    Brand: {item.brand}
+                  </Typography>
+                  <Grid>
+                    {isBasket && (
+                      <LoadingButton
+                        loading={
+                          status ===
+                          "pendingRemoveItem" + item.productId + "rem"
+                        }
+                        onClick={() =>
+                          dispatch(
+                            removeBasketItemAsync({
+                              productId: item.productId,
+                              quantity: 1,
+                              name: "rem",
+                            })
+                          )
+                        }
+                        color="error"
+                      >
+                        <Remove />
+                      </LoadingButton>
+                    )}
+                    {item.quantity}
+                    {isBasket && (
+                      <LoadingButton
+                        loading={status === "pendingAddItem" + item.productId}
+                        onClick={() =>
+                          dispatch(
+                            addBasketItemAsync({ productId: item.productId })
+                          )
+                        }
+                        color="secondary"
+                      >
+                        <Add />
+                      </LoadingButton>
+                    )}
+                  </Grid>
+                </Grid>
+                <Grid
+                  item
+                  xs={4}
+                  container
+                  justifyContent="space-between"
+                  alignItems="center"
+                  alignSelf="end"
+                >
+                  <Typography>
+                    Price: ${((item.price / 100) * item.quantity).toFixed(2)}
+                  </Typography>
+
+                  {isBasket && (
+                    <LoadingButton
+                      loading={
+                        status === "pendingRemoveItem" + item.productId + "del"
+                      }
+                      onClick={() =>
+                        dispatch(
+                          removeBasketItemAsync({
+                            productId: item.productId,
+                            quantity: item.quantity,
+                            name: "del",
+                          })
+                        )
+                      }
+                      color="error"
+                    >
+                      <Typography>Delete</Typography>
+                    </LoadingButton>
+                  )}
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      ))}
+    </>
   );
 }

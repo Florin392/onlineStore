@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { ChangeEvent, useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { currencyFormat } from "../../app/helpers/utils";
 import NotFound from "../../app/errors/NotFound";
 import LoadingPage from "../../app/layout/LoadingComponent";
@@ -26,6 +26,7 @@ import { productSelectors } from "../../state/catalog/slice";
 import { fetchProductAsync } from "../../state/catalog/actions";
 
 export default function ProductDetails() {
+  const navigate = useNavigate();
   const basket = useAppSelector(basketSelector);
   const status = useAppSelector(statusSelector);
   const { status: productStatus } = useAppSelector((state) => state.catalog);
@@ -74,28 +75,45 @@ export default function ProductDetails() {
     }
   }, [item, product, quantity, dispatch]);
 
+  const handleGoBack = useCallback(() => {
+    navigate("/catalog");
+  }, [navigate]);
+
   if (productStatus.includes("pending"))
     return <LoadingPage message="Loading product..." />;
 
   if (!product) return <NotFound />;
 
   return (
-    <Grid container spacing={6}>
+    <Grid
+      container
+      spacing={{ xs: 2, md: 6 }}
+      direction={{ xs: "column", md: "row" }}
+    >
       <Grid item xs={6}>
-        <img
-          src={product.pictureUrl}
-          alt={product.name}
-          style={{ width: "100%" }}
-        />
+        <Grid>
+          <LoadingButton onClick={handleGoBack}>Go back</LoadingButton>
+          <Grid>
+            <img
+              src={product.pictureUrl}
+              alt={product.name}
+              style={{ width: "100%" }}
+            />
+          </Grid>
+        </Grid>
       </Grid>
-      <Grid item xs={6}>
-        <Typography variant="h3">{product.name} </Typography>
+
+      <Grid item xs={12} md={6}>
+        <Typography variant="h5" gutterBottom>
+          {product.name}
+        </Typography>
         <Divider sx={{ mb: 2 }} />
-        <Typography variant="h4" color="secondary">
+        <Typography variant="h5" color="secondary" gutterBottom>
           {currencyFormat(product.price)}
         </Typography>
+
         <TableContainer>
-          <Table>
+          <Table sx={{ spacing: 4, backgroundColor: "rgb(247, 247, 247)" }}>
             <TableBody>
               <TableRow>
                 <TableCell>Name</TableCell>
@@ -120,8 +138,8 @@ export default function ProductDetails() {
             </TableBody>
           </Table>
         </TableContainer>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
+        <Grid container spacing={2} mt={2}>
+          <Grid item xs={4} md={6}>
             <TextField
               onChange={handleInputChange}
               variant="outlined"
@@ -131,7 +149,7 @@ export default function ProductDetails() {
               value={quantity}
             />
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={8} md={6}>
             <LoadingButton
               disabled={
                 item?.quantity === quantity || (!item && quantity === 0)

@@ -1,25 +1,23 @@
-import * as React from "react";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Fade from "@mui/material/Fade";
 import { useAppDispatch } from "../hooks/useAppDispatch";
-import { useAppSelector } from "../hooks/useAppSelector";
 import { Link } from "react-router-dom";
 import { signOut } from "../../state/account/slice";
 import { clearBasket } from "../../state/basket/slice";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import { AccountCircle } from "@mui/icons-material";
 
 export default function SignedInMenu() {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.account);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
   const handleClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   }, []);
-  
+
   const handleClose = useCallback(() => {
     setAnchorEl(null);
   }, []);
@@ -31,8 +29,13 @@ export default function SignedInMenu() {
 
   return (
     <>
-      <Button color="inherit" onClick={handleClick} sx={{ typography: "h6" }}>
-        {user?.email}
+      <Button
+        aria-haspopup="true"
+        color="inherit"
+        onClick={handleClick}
+        sx={{ typography: "h6" }}
+      >
+        <AccountCircle />
       </Button>
       <Menu
         anchorEl={anchorEl}

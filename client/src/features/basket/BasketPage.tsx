@@ -1,8 +1,4 @@
-import {
-  Button,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Button, Grid, Typography } from "@mui/material";
 import BasketSummary from "./BasketSummary";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../app/hooks/useAppSelector";
@@ -16,12 +12,11 @@ export default function BasketPage() {
     return <Typography variant="h3">Your basket is empty</Typography>;
 
   return (
-    <>
+    <Grid container xs={12} px={{ sm: 4, md: 10, lg: 6, xl: 12 }}>
       <BasketTable items={basket.items} />
-      
-      <Grid container>
-        <Grid item xs={6} />
-        <Grid item xs={6}>
+      <Grid container xs={12}>
+        <Grid item xs={0} md={6} />
+        <Grid item xs={12} md={6} mt={{ xs: 2, md: 0 }}>
           <BasketSummary />
           <Button
             component={Link}
@@ -34,6 +29,6 @@ export default function BasketPage() {
           </Button>
         </Grid>
       </Grid>
-    </>
+    </Grid>
   );
 }

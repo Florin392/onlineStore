@@ -28,6 +28,15 @@ export default function App() {
         default: palleteType === "light" ? "#eaeaea" : "#121212",
       },
     },
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 1024,
+        lg: 1280,
+        xl: 1536,
+      },
+    },
   });
 
   const initApp = useCallback(async () => {

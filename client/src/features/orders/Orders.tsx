@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import agent from "../../app/api/agent";
-import LoadingComponent from "../../app/layout/LoadingComponent";
+import LoadingComponent from "../../app/components/LoadingComponent";
 
 import OrderDetailed from "./OrderDetailed";
 import { Order } from "../../app/models/order";

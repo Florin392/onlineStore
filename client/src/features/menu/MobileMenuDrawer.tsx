@@ -9,14 +9,9 @@ import {
   Typography,
 } from "@mui/material";
 import { NavLink } from "react-router-dom";
-import { navStyles } from "./navStyles";
+import { navStyles } from "../../features/navigationBar/navStyles";
 import CloseIcon from "@mui/icons-material/Close";
-
-interface Props {
-  darkMode: boolean;
-  handleThemeChange: () => void;
-  handleDrawerToggle: () => void;
-}
+import { useTheme } from "../../app/hooks/useTheme";
 
 const midLinks = [
   { title: "catalog", path: "/catalog" },
@@ -24,27 +19,28 @@ const midLinks = [
   { title: "contact", path: "/contact" },
 ];
 
-export default function MobileMenuDrawer({
-  darkMode,
-  handleThemeChange,
-  handleDrawerToggle,
-}: Props) {
+interface Props {
+  handleDrawerToggle: () => void;
+}
+
+export default function MobileMenuDrawer({ handleDrawerToggle }: Props) {
+  const { darkMode, handleThemeChange } = useTheme();
+
   return (
-    <Grid container textAlign="center" paddingY={1}>
+    <Grid container textAlign="center" py={1}>
       <Grid
         container
         item
         xs={12}
         justifyContent="end"
-        alignItems="end"
-        mr={{ xs: 2, sm: 8 }}
-        ml={{ xs: 2, sm: 4 }}
+        alignItems="center"
+        pr={4}
       >
         <IconButton onClick={handleDrawerToggle}>
           <CloseIcon />
         </IconButton>
       </Grid>
-      <Divider variant="fullWidth" />
+      <Divider />
       <Grid item xs={12} textAlign="right">
         {midLinks.map(({ title, path }) => (
           <ListItem
@@ -54,12 +50,8 @@ export default function MobileMenuDrawer({
             disablePadding
             sx={navStyles}
           >
-            <ListItemButton
-              sx={{
-                textAlign: "center",
-              }}
-            >
-              <ListItemText primary={title.toLocaleUpperCase()} />
+            <ListItemButton sx={{ textAlign: "center" }}>
+              <ListItemText primary={title.toUpperCase()} />
             </ListItemButton>
           </ListItem>
         ))}

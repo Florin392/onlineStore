@@ -1,5 +1,4 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import App from "../layout/App";
 import HomePage from "../../features/home/HomePage";
 import Catalog from "../../features/catalog/Catalog";
 import ProductDetails from "../../features/catalog/ProductDetails";
@@ -14,36 +13,43 @@ import RequiredAuth from "./RequiredAuth";
 import Orders from "../../features/orders/Orders";
 import CheckoutWrapper from "../../features/checkout/CheckoutWrapper";
 import Inventory from "../../features/admin/Inventory";
+import App from "../layout/App";
+import Layout from "../layout/Layout";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      // authenticated routes
       {
-        element: <RequiredAuth />,
+        element: <Layout />, // Use the Layout component here
         children: [
-          { path: "checkout", element: <CheckoutWrapper /> },
-          { path: "orders", element: <Orders /> },
+          // authenticated routes
+          {
+            element: <RequiredAuth />,
+            children: [
+              { path: "checkout", element: <CheckoutWrapper /> },
+              { path: "orders", element: <Orders /> },
+            ],
+          },
+          // admin routes
+          {
+            element: <RequiredAuth roles={["Admin"]} />,
+            children: [{ path: "inventory", element: <Inventory /> }],
+          },
+          { path: "", element: <HomePage /> },
+          { path: "catalog", element: <Catalog /> },
+          { path: "catalog/:id", element: <ProductDetails /> },
+          { path: "about", element: <AboutPage /> },
+          { path: "contact", element: <ContactPage /> },
+          { path: "server-error", element: <ServerError /> },
+          { path: "not-found", element: <NotFound /> },
+          { path: "basket", element: <BasketPage /> },
+          { path: "login", element: <Login /> },
+          { path: "register", element: <Register /> },
+          { path: "*", element: <Navigate replace to="/not-found" /> },
         ],
       },
-      // admin routes
-      {
-        element: <RequiredAuth roles={["Admin"]} />,
-        children: [{ path: "inventory", element: <Inventory /> }],
-      },
-      { path: "", element: <HomePage /> },
-      { path: "catalog", element: <Catalog /> },
-      { path: "catalog/:id", element: <ProductDetails /> },
-      { path: "about", element: <AboutPage /> },
-      { path: "contact", element: <ContactPage /> },
-      { path: "server-error", element: <ServerError /> },
-      { path: "not-found", element: <NotFound /> },
-      { path: "basket", element: <BasketPage /> },
-      { path: "login", element: <Login /> },
-      { path: "register", element: <Register /> },
-      { path: "*", element: <Navigate replace to="/not-found" /> },
     ],
   },
 ]);

@@ -55,6 +55,21 @@ namespace API.Controllers
             return product;
         }
 
+        [HttpGet("categories")]
+        public async Task<IActionResult> GetCategories()
+        {
+            var categories = await _context.Products
+                .GroupBy(p => p.Type)
+                .Select(g => new
+                {
+                    Name = g.Key,
+                    Subcategories = g.Select(p => new { p.Id, p.Name }).ToList()
+                })
+                .ToListAsync();
+
+            return Ok(categories);
+        }
+
         [HttpGet("filters")]
         public async Task<IActionResult> GetFilters()
         {
@@ -143,5 +158,7 @@ namespace API.Controllers
 
             return BadRequest(new ProblemDetails { Title = "Problem deleting product" });
         }
+
+
     }
 }

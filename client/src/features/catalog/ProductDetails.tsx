@@ -13,7 +13,7 @@ import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { currencyFormat } from "../../app/helpers/utils";
 import NotFound from "../../app/errors/NotFound";
-import LoadingPage from "../../app/layout/LoadingComponent";
+import LoadingPage from "../../app/components/LoadingComponent";
 import { LoadingButton } from "@mui/lab";
 import { useAppSelector } from "../../app/hooks/useAppSelector";
 import { basketSelector, statusSelector } from "../../state/basket/selectors";
@@ -41,7 +41,7 @@ export default function ProductDetails() {
 
   useEffect(() => {
     if (item) setQuantity(item.quantity);
-    if (!product) dispatch(fetchProductAsync(parseInt(product && id)));
+    if (!product && id) dispatch(fetchProductAsync(parseInt(id)));
   }, [item, product, dispatch, id]);
 
   const handleInputChange = useCallback(

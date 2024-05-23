@@ -10,8 +10,6 @@ import {
   TableBody,
   Box,
   Grid,
-  useTheme,
-  useMediaQuery,
   Typography,
 } from "@mui/material";
 import { currencyFormat } from "../../app/helpers/utils";
@@ -22,6 +20,7 @@ import {
 import { BasketItem } from "../../app/models/basket";
 import { useAppSelector } from "../../app/hooks/useAppSelector";
 import { useAppDispatch } from "../../app/hooks/useAppDispatch";
+import useIsDesktop from "../../app/hooks/useIsDesktop";
 
 interface Props {
   items: BasketItem[];
@@ -30,10 +29,7 @@ interface Props {
 export default function BasketTable({ items, isBasket = true }: Props) {
   const dispatch = useAppDispatch();
   const { status } = useAppSelector((state) => state.basket);
-
-  const { breakpoints } = useTheme();
-
-  const isDesktop = useMediaQuery(breakpoints.up("md"));
+  const isDesktop = useIsDesktop();
 
   return isDesktop ? (
     <TableContainer component={Paper}>

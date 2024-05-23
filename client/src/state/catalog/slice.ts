@@ -1,12 +1,13 @@
 import { createEntityAdapter, createSlice } from "@reduxjs/toolkit";
 import {
+  fetchCategoriesAsync,
   fetchFiltersAsync,
   fetchProductAsync,
   fetchProductsAsync,
 } from "./actions";
 import { Product } from "../../app/models/products";
 import { RootState } from "../store";
-import { CatalogState } from "./types";
+import { CatalogState } from "./types"; // Import Category
 
 const productsAdapter = createEntityAdapter<Product>();
 
@@ -20,17 +21,20 @@ function initParams() {
   };
 }
 
+const initialState: CatalogState = {
+  productsLoaded: false,
+  filtersLoaded: false,
+  status: "idle",
+  brands: [],
+  types: [],
+  categories: [], // Correct type for categories
+  productParams: initParams(),
+  metaData: null,
+};
+
 export const catalogSlice = createSlice({
   name: "catalog",
-  initialState: productsAdapter.getInitialState<CatalogState>({
-    productsLoaded: false,
-    filtersLoaded: false,
-    status: "idle",
-    brands: [],
-    types: [],
-    productParams: initParams(),
-    metaData: null,
-  }),
+  initialState: productsAdapter.getInitialState(initialState),
   reducers: {
     setProductParams: (state, action) => {
       state.productsLoaded = false;
@@ -63,7 +67,6 @@ export const catalogSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // fetchProductsAsync
     builder.addCase(fetchProductsAsync.pending, (state) => {
       state.status = "pendingFetchProducts";
     });
@@ -77,7 +80,6 @@ export const catalogSlice = createSlice({
       state.status = "idle";
     });
 
-    // fetchProductAsync
     builder.addCase(fetchProductAsync.pending, (state) => {
       state.status = "pendingFetchProduct";
     });
@@ -90,7 +92,6 @@ export const catalogSlice = createSlice({
       state.status = "idle";
     });
 
-    // fetchFiltersAsync
     builder.addCase(fetchFiltersAsync.pending, (state) => {
       state.status = "pendingFetchFilters";
     });
@@ -103,6 +104,18 @@ export const catalogSlice = createSlice({
     builder.addCase(fetchFiltersAsync.rejected, (state, action) => {
       state.status = "idle";
       console.log(action.payload);
+    });
+
+    builder.addCase(fetchCategoriesAsync.pending, (state) => {
+      state.status = "pendingFetchCategories";
+    });
+    builder.addCase(fetchCategoriesAsync.fulfilled, (state, action) => {
+      state.categories = action.payload;
+      state.status = "idle";
+    });
+    builder.addCase(fetchCategoriesAsync.rejected, (state, action) => {
+      console.log(action.payload);
+      state.status = "idle";
     });
   },
 });

@@ -55,3 +55,14 @@ export const fetchFiltersAsync = createAsyncThunk(
     }
   }
 );
+
+export const fetchCategoriesAsync = createAsyncThunk(
+  "catalog/fetchCategoriesAsync",
+  async (_, thunkAPI) => {
+    try {
+      return await agent.Catalog.fetchCategories();
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue({ error: error.data });
+    }
+  }
+);

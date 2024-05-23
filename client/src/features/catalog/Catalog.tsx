@@ -2,10 +2,9 @@ import React, { useCallback, useState } from "react";
 import { Grid, Paper, Hidden, Button } from "@mui/material";
 import { useAppDispatch } from "../../app/hooks/useAppDispatch";
 import { useAppSelector } from "../../app/hooks/useAppSelector";
-import LoadingPage from "../../app/layout/LoadingComponent";
+import LoadingPage from "../../app/components/LoadingComponent";
 import { setPageNumber, setProductParams } from "../../state/catalog/slice";
 import ProductList from "./ProductList";
-import ProductSearch from "./ProductSarch";
 import RadioButtonGroup from "../../app/components/RadioButtonGroup";
 import CheckboxButtons from "../../app/components/CheckboxButtons";
 import AppPagination from "../../app/components/AppPagination";
@@ -19,11 +18,8 @@ const sortOptions = [
 
 export default function Catalog() {
   const dispatch = useAppDispatch();
-
   const { products, brands, filtersLoaded, types, metaData } = useProducts();
-
   const { productParams } = useAppSelector((state) => state.catalog);
-
   const [filtersVisible, setFiltersVisible] = useState(false);
 
   const handleSortingOrdeBy = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -56,10 +52,6 @@ export default function Catalog() {
     <Grid container columnSpacing={4}>
       <Hidden mdDown>
         <Grid item xs={3}>
-          {/* Filters section */}
-          <Paper sx={{ mb: 2 }}>
-            <ProductSearch />
-          </Paper>
           <Paper sx={{ mb: 2, p: 2 }}>
             <RadioButtonGroup
               selectedValue={productParams.orderBy}
@@ -84,7 +76,6 @@ export default function Catalog() {
         </Grid>
       </Hidden>
 
-      {/* Toggle filters button */}
       <Hidden mdUp>
         <Grid item xs={12} sx={{ mb: 2 }}>
           <Button variant="contained" onClick={toggleFiltersVisibility}>
@@ -93,13 +84,9 @@ export default function Catalog() {
         </Grid>
       </Hidden>
 
-      {/* Filters section (visible on mobile when toggled) */}
       <Hidden mdUp>
         {filtersVisible && (
           <Grid item xs={12}>
-            <Paper sx={{ mb: 2 }}>
-              <ProductSearch />
-            </Paper>
             <Paper sx={{ mb: 2, p: 2 }}>
               <RadioButtonGroup
                 selectedValue={productParams.orderBy}
@@ -121,22 +108,19 @@ export default function Catalog() {
                 onChange={handleFilterByTypes}
               />
             </Paper>
-            {/* Apply Filters button */}
             <Grid mb={2}>
               <Button variant="contained" onClick={applyFiltersAndHide}>
-                Apply Filters & Hide
+                Apply Filters
               </Button>
             </Grid>
           </Grid>
         )}
       </Hidden>
 
-      {/* Product list */}
       <Grid item xs={12} md={9}>
         <ProductList products={products} />
       </Grid>
 
-      {/* Pagination */}
       <Grid item xs={3} />
       <Grid item xs={12} md={9} sx={{ mb: 2 }}>
         {metaData && (

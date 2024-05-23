@@ -7,11 +7,12 @@ import {
   MenuItem,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AccountCircle } from "@mui/icons-material";
-import { navStyles } from "./navStyles";
+import { navStyles } from "../../features/navigationBar/navStyles";
 
 export default function AccountHover() {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handlePopoverOpen = (event: any) => {
@@ -24,6 +25,7 @@ export default function AccountHover() {
 
   const handleClose = () => {
     setAnchorEl(null);
+    navigate("/login");
   };
   const open = Boolean(anchorEl);
 
@@ -34,7 +36,7 @@ export default function AccountHover() {
         onMouseEnter={handlePopoverOpen}
         onMouseLeave={handlePopoverClose}
       >
-        <IconButton sx={navStyles}>
+        <IconButton sx={navStyles} size="medium">
           <AccountCircle />
         </IconButton>
 
@@ -59,12 +61,7 @@ export default function AccountHover() {
               </Typography>
               <Grid container alignItems="center" xs={8}>
                 <Grid item xs={3}>
-                  <Button
-                    variant="contained"
-                    onClick={handleClose}
-                    component={Link}
-                    to="/login"
-                  >
+                  <Button variant="contained" onClick={handleClose}>
                     Login
                   </Button>
                 </Grid>

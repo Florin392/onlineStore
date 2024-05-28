@@ -10,10 +10,12 @@ import { fetchBasketAsync } from "../../state/basket/actions";
 import ThemeProvider from "../providers/ThemeProvider";
 import { DrawerProvider } from "../providers/DrawerProvider";
 import GradientNavBar from "../../features/navigationBar/GradientNavBar";
+import useIsDesktop from "../hooks/useIsDesktop";
 
 export default function App() {
   const dispatch = useAppDispatch();
   const [loading, setLoading] = useState(true);
+  const isDesktop = useIsDesktop();
 
   const initApp = useCallback(async () => {
     try {
@@ -42,7 +44,7 @@ export default function App() {
         ) : (
           <>
             <GradientNavBar />
-            <Container>
+            <Container sx={{ paddingX: isDesktop ? "auto" : "0" }}>
               <Outlet />
             </Container>
           </>

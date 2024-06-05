@@ -1,9 +1,7 @@
 import { Grid } from "@mui/material";
 import { Outlet, useLocation } from "react-router-dom";
-import Footer from "./Footer";
 import Header from "../../features/navigationBar/Header";
 import NavigationBar from "../../features/navigationBar/NavigationBar";
-
 
 function Layout() {
   const location = useLocation();
@@ -15,10 +13,11 @@ function Layout() {
     <>
       {!shouldHideHeader && <Header />}
       {!shouldHideHeader && <NavigationBar />}
-      <Grid container height="100%" minHeight="calc(100vh - 12rem)">
-        <Outlet />
+      <Grid container>
+        <Grid item xs={12} height="100%" minHeight="calc(100vh - 10.5rem)">
+          <Outlet />
+        </Grid>
       </Grid>
-      <Footer />
     </>
   );
 }

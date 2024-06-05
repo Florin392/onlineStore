@@ -2,14 +2,14 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Fade from "@mui/material/Fade";
-import { useAppDispatch } from "../hooks/useAppDispatch";
+import { useAppDispatch } from "../../app/hooks/useAppDispatch";
 import { Link } from "react-router-dom";
 import { signOut } from "../../state/account/slice";
 import { clearBasket } from "../../state/basket/slice";
 import { useCallback, useState } from "react";
 import { AccountCircle } from "@mui/icons-material";
 
-export default function SignedInMenu() {
+export default function UserLogedIn() {
   const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);

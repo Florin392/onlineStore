@@ -35,10 +35,9 @@ export default function MenuHomePage() {
         setLoading(false);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
-        setLoading(false); // or handle error state
+        setLoading(false);
       }
     };
-
     fetchData();
   }, [dispatch]);
 
@@ -121,18 +120,14 @@ export default function MenuHomePage() {
               >
                 <List>
                   {hoveredCategory.subcategories.map((subcategory) => (
-                    <>
-                      <List>
-                        <ListItem
-                          key={subcategory.id}
-                          component={Link}
-                          to={`/catalog/${subcategory.id}`}
-                          style={{ ...navStyles }}
-                        >
-                          {subcategory.name}
-                        </ListItem>
-                      </List>
-                    </>
+                    <ListItem
+                      key={subcategory.id}
+                      component={Link}
+                      to={`/catalog/${subcategory.id}`}
+                      style={{ ...navStyles }}
+                    >
+                      {subcategory.name}
+                    </ListItem>
                   ))}
                 </List>
               </Paper>

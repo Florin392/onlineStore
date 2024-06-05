@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Grid, Paper, Hidden, Button } from "@mui/material";
+import { Grid, Paper, Button } from "@mui/material";
 import { useAppDispatch } from "../../app/hooks/useAppDispatch";
 import { useAppSelector } from "../../app/hooks/useAppSelector";
 import LoadingPage from "../../app/components/LoadingComponent";
@@ -9,6 +9,7 @@ import RadioButtonGroup from "../../app/components/RadioButtonGroup";
 import CheckboxButtons from "../../app/components/CheckboxButtons";
 import AppPagination from "../../app/components/AppPagination";
 import useProducts from "../../app/hooks/useProducts";
+import useIsDesktop from "../../app/hooks/useIsDesktop";
 
 const sortOptions = [
   { value: "name", label: "Alphabetical" },
@@ -21,6 +22,7 @@ export default function Catalog() {
   const { products, brands, filtersLoaded, types, metaData } = useProducts();
   const { productParams } = useAppSelector((state) => state.catalog);
   const [filtersVisible, setFiltersVisible] = useState(false);
+  const isDesktop = useIsDesktop();
 
   const handleSortingOrdeBy = (e: React.ChangeEvent<HTMLSelectElement>) => {
     dispatch(setProductParams({ orderBy: e.target.value }));
@@ -50,7 +52,7 @@ export default function Catalog() {
 
   return (
     <Grid container columnSpacing={4}>
-      <Hidden mdDown>
+      {isDesktop && (
         <Grid item xs={3}>
           <Paper sx={{ mb: 2, p: 2 }}>
             <RadioButtonGroup
@@ -74,59 +76,61 @@ export default function Catalog() {
             />
           </Paper>
         </Grid>
-      </Hidden>
+      )}
 
-      <Hidden mdUp>
+      {!isDesktop && (
         <Grid item xs={12} sx={{ mb: 2 }}>
           <Button variant="contained" onClick={toggleFiltersVisibility}>
             {filtersVisible ? "Hide Filters" : "Show Filters"}
           </Button>
         </Grid>
-      </Hidden>
+      )}
 
-      <Hidden mdUp>
-        {filtersVisible && (
-          <Grid item xs={12}>
-            <Paper sx={{ mb: 2, p: 2 }}>
-              <RadioButtonGroup
-                selectedValue={productParams.orderBy}
-                options={sortOptions}
-                onChange={handleSortingOrdeBy}
-              />
-            </Paper>
-            <Paper sx={{ mb: 2, p: 2 }}>
-              <CheckboxButtons
-                items={brands}
-                checked={productParams.brands}
-                onChange={handleFilterByBrands}
-              />
-            </Paper>
-            <Paper sx={{ mb: 2, p: 2 }}>
-              <CheckboxButtons
-                items={types}
-                checked={productParams.types}
-                onChange={handleFilterByTypes}
-              />
-            </Paper>
-            <Grid mb={2}>
-              <Button variant="contained" onClick={applyFiltersAndHide}>
-                Apply Filters
-              </Button>
-            </Grid>
+      {!isDesktop && filtersVisible && (
+        <Grid item xs={12}>
+          <Paper sx={{ mb: 2, p: 2 }}>
+            <RadioButtonGroup
+              selectedValue={productParams.orderBy}
+              options={sortOptions}
+              onChange={handleSortingOrdeBy}
+            />
+          </Paper>
+          <Paper sx={{ mb: 2, p: 2 }}>
+            <CheckboxButtons
+              items={brands}
+              checked={productParams.brands}
+              onChange={handleFilterByBrands}
+            />
+          </Paper>
+          <Paper sx={{ mb: 2, p: 2 }}>
+            <CheckboxButtons
+              items={types}
+              checked={productParams.types}
+              onChange={handleFilterByTypes}
+            />
+          </Paper>
+          <Grid mb={2}>
+            <Button variant="contained" onClick={applyFiltersAndHide}>
+              Apply Filters
+            </Button>
           </Grid>
-        )}
-      </Hidden>
+        </Grid>
+      )}
 
-      <Grid item xs={12} md={9}>
+      <Grid item xs={12} md={isDesktop ? 9 : 12}>
         <ProductList products={products} />
       </Grid>
 
-      <Grid item xs={3} />
-      <Grid item xs={12} md={9} sx={{ mb: 2 }}>
-        {metaData && (
-          <AppPagination metaData={metaData} onPageChange={handlePageChange} />
-        )}
-      </Grid>
+      {products.length > 0 && (
+        <Grid item xs={12} md={isDesktop ? 9 : 12} sx={{ mb: 2 }}>
+          {metaData && (
+            <AppPagination
+              metaData={metaData}
+              onPageChange={handlePageChange}
+            />
+          )}
+        </Grid>
+      )}
     </Grid>
   );
 }

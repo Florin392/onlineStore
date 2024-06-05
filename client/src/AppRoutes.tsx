@@ -1,20 +1,21 @@
 import { Navigate, createBrowserRouter } from "react-router-dom";
-import HomePage from "../../features/home/HomePage";
-import Catalog from "../../features/catalog/Catalog";
-import ProductDetails from "../../features/catalog/ProductDetails";
-import AboutPage from "../../features/about/AboutPage";
-import ContactPage from "../../features/contact/ContactPage";
-import ServerError from "../errors/ServerError";
-import NotFound from "../errors/NotFound";
-import BasketPage from "../../features/basket/BasketPage";
-import Login from "../../features/account/Login";
-import Register from "../../features/account/Register";
-import RequiredAuth from "./RequiredAuth";
-import Orders from "../../features/orders/Orders";
-import CheckoutWrapper from "../../features/checkout/CheckoutWrapper";
-import Inventory from "../../features/admin/Inventory";
-import App from "../layout/App";
-import Layout from "../layout/Layout";
+import HomePage from "./features/home/HomePage";
+import Catalog from "./features/catalog/Catalog";
+import ProductDetails from "./features/catalog/ProductDetails";
+import AboutPage from "./features/about/AboutPage";
+import ContactPage from "./features/contact/ContactPage";
+import ServerError from "./app/errors/ServerError";
+import NotFound from "./app/errors/NotFound";
+import BasketPage from "./features/basket/BasketPage";
+import Login from "./features/account/Login";
+import Register from "./features/account/Register";
+import RequiredAuth from "./app/router/RequiredAuth";
+import Orders from "./features/orders/Orders";
+import CheckoutWrapper from "./features/checkout/CheckoutWrapper";
+import Inventory from "./features/admin/Inventory";
+
+import Layout from "./app/layout/Layout";
+import App from "./App";
 
 export const router = createBrowserRouter([
   {

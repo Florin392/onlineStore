@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { AccountCircle } from "@mui/icons-material";
-import { navStyles } from "../../features/navigationBar/navStyles";
+import { navStyles } from "./navStyles";
 
 export default function AccountHover() {
   const navigate = useNavigate();

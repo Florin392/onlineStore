@@ -1,7 +1,7 @@
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 import { AccountState } from "./types";
 import { fetchCurrentUserAsync, signInUserAsync } from "./actions";
-import { router } from "../../app/router/Routes";
+import { router } from "../../AppRoutes";
 import { toast } from "react-toastify";
 
 const initialState: AccountState = {

@@ -17,6 +17,7 @@ import { useAppDispatch } from "../../app/hooks/useAppDispatch";
 import { useAppSelector } from "../../app/hooks/useAppSelector";
 import { addBasketItemAsync } from "../../state/basket/actions";
 import { statusSelector } from "../../state/basket/selectors";
+import { toast } from "react-toastify";
 
 interface Props {
   product: Product;
@@ -28,6 +29,7 @@ export default function ProductCard({ product }: Props) {
 
   const handleAddItem = useCallback(() => {
     dispatch(addBasketItemAsync({ productId: product.id }));
+    toast.success("Item Added");
   }, [dispatch, product.id]);
 
   return (

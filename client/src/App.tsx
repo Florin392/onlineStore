@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useState } from "react";
-import { Container, CssBaseline } from "@mui/material";
+import { Container, CssBaseline, Grid } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import LoadingPage from "../components/LoadingComponent";
-import { useAppDispatch } from "../hooks/useAppDispatch";
-import { fetchCurrentUserAsync } from "../../state/account/actions";
-import { fetchBasketAsync } from "../../state/basket/actions";
-import ThemeProvider from "../providers/ThemeProvider";
-import { DrawerProvider } from "../providers/DrawerProvider";
-import GradientNavBar from "../../features/navigationBar/GradientNavBar";
-import useIsDesktop from "../hooks/useIsDesktop";
+import LoadingPage from "./app/components/LoadingComponent";
+import { useAppDispatch } from "./app/hooks/useAppDispatch";
+import useIsDesktop from "./app/hooks/useIsDesktop";
+import { DrawerProvider } from "./app/providers/DrawerProvider";
+import GradientNavBar from "./features/navigationBar/GradientNavBar";
+import { fetchCurrentUserAsync } from "./state/account/actions";
+import { fetchBasketAsync } from "./state/basket/actions";
+import ThemeProvider from "./app/providers/ThemeProvider";
+import Footer from "./app/layout/Footer";
 
 export default function App() {
   const dispatch = useAppDispatch();
@@ -47,6 +48,9 @@ export default function App() {
             <Container sx={{ paddingX: isDesktop ? "auto" : "0" }}>
               <Outlet />
             </Container>
+            <Grid container justifySelf="end" >
+              <Footer />
+            </Grid>
           </>
         )}
       </DrawerProvider>

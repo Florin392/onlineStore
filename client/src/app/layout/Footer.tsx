@@ -5,10 +5,9 @@ function Footer() {
   return (
     <Grid
       container
-      component="footer"
       alignItems="center"
       justifyContent={{ xs: "center", sm: "end" }}
-      pr={{ xs: 0, md: 5 }}
+      pr={{ xs: 0, sm: 5 }}
     >
       <IconButton
         component="a"
@@ -26,7 +25,9 @@ function Footer() {
       >
         <GitHub />
       </IconButton>
-      <Typography variant="body1">© 2024</Typography>
+      <Typography variant="caption">
+        COPYRIGHT 2024 © Florin Iordache
+      </Typography>
     </Grid>
   );
 }

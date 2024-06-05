@@ -28,14 +28,7 @@ export default function MobileMenuDrawer({ handleDrawerToggle }: Props) {
 
   return (
     <Grid container textAlign="center" py={1}>
-      <Grid
-        container
-        item
-        xs={12}
-        justifyContent="end"
-        alignItems="center"
-        pr={4}
-      >
+      <Grid container justifyContent="end" alignItems="center" pr={4}>
         <IconButton onClick={handleDrawerToggle}>
           <CloseIcon />
         </IconButton>
@@ -55,7 +48,7 @@ export default function MobileMenuDrawer({ handleDrawerToggle }: Props) {
             </ListItemButton>
           </ListItem>
         ))}
-        <Grid container xs={12} alignItems="center">
+        <Grid container item xs={12} alignItems="center">
           <Grid item xs={8}>
             <Typography>Dark Mode</Typography>
           </Grid>

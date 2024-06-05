@@ -1,4 +1,4 @@
-import { Grid, Typography, IconButton } from "@mui/material";
+import { Grid, Typography, IconButton, useTheme } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useCallback } from "react";
 import { useDrawer } from "../../app/hooks/useDrawerContext";
@@ -7,9 +7,13 @@ import useIsDesktop from "../../app/hooks/useIsDesktop";
 export default function NavigationBar() {
   const isDesktop = useIsDesktop();
   const { handleDrawerToggle } = useDrawer();
+  const theme = useTheme();
+
+  const paletteType = theme.palette.mode;
+  const isLightMode = paletteType === "light";
 
   const handleMenuOpen = useCallback(() => {
-    if (!isDesktop) {
+    if (isDesktop) {
       handleDrawerToggle();
     }
   }, [handleDrawerToggle, isDesktop]);
@@ -21,12 +25,12 @@ export default function NavigationBar() {
           container
           width="10rem"
           flexWrap="nowrap"
-          sx={{ backgroundColor: "#fff" }}
+          sx={{
+            backgroundColor: isLightMode ? "#ffffff" : "#121212",
+          }}
           px={1}
           height="2rem"
           alignItems="center"
-          position="relative"
-          bottom="-.5rem"
           borderRadius="15px 15px 0 0 "
         >
           <IconButton onClick={handleMenuOpen}>

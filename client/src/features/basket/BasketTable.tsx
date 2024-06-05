@@ -127,7 +127,9 @@ export default function BasketTable({ items, isBasket = true }: Props) {
     </TableContainer>
   ) : (
     <>
-      <Typography>My basket</Typography>
+      <Typography variant="h4" gutterBottom sx={{ paddingLeft: 1 }}>
+        My basket
+      </Typography>
       {items.map((item) => (
         <Grid container>
           <Grid
@@ -137,14 +139,9 @@ export default function BasketTable({ items, isBasket = true }: Props) {
             alignItems="center"
             p={2}
             mb={2}
+            mx={1}
           >
-            {/* Left */}
-            <Grid
-              container
-              xs={2}
-              justifyContent="center"
-              // height={{ xs: 70, sm: 100 }}
-            >
+            <Grid container xs={2} justifyContent="center">
               <img
                 src={item.pictureUrl}
                 alt={item.name}

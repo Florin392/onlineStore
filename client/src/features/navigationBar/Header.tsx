@@ -18,8 +18,8 @@ import { navStyles } from "../../features/navigationBar/navStyles";
 import ProductSearch from "../../features/catalog/ProductSarch";
 import { useAppSelector } from "../../app/hooks/useAppSelector";
 import { useDrawer } from "../../app/hooks/useDrawerContext";
-import AccountHover from "../../app/layout/AccountHover";
-import SignedInMenu from "../../app/layout/SignedInMenu";
+import AccountHover from "./AccountHover";
+import SignedInMenu from "../account/UserLogedIn";
 import MobileMenuDrawer from "../menu/MobileMenuDrawer";
 import useIsDesktop from "../../app/hooks/useIsDesktop";
 
@@ -74,6 +74,7 @@ export default function Header() {
           {/* Right side of appbar */}
           <Grid
             container
+            item
             xs={7}
             sm={6}
             md={3}
@@ -118,13 +119,13 @@ export default function Header() {
       </AppBar>
 
       <Hidden mdUp>
-        <Grid item flexGrow={1} marginY={2} px={{ xs: 1, sm: 8 }}>
+        <Grid container item flexGrow={1} marginY={2} px={{ xs: 1, sm: 8 }}>
           {user?.roles?.includes("Admin") ? (
             <Grid container alignItems="center" justifyContent="space-between">
               <Grid item xs={10}>
                 <ProductSearch />
               </Grid>
-              <Grid container xs={2} justifyContent="end">
+              <Grid item xs={2} display="flex" justifyContent="end">
                 <IconButton component={NavLink} to="/inventory" sx={navStyles}>
                   <InventoryRounded />
                 </IconButton>

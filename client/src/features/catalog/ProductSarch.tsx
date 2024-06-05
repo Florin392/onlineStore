@@ -1,12 +1,13 @@
-import { Grid, Paper } from "@mui/material";
+import { Grid, Paper, debounce } from "@mui/material";
 import { useAppSelector } from "../../app/hooks/useAppSelector";
 import { useAppDispatch } from "../../app/hooks/useAppDispatch";
 import { setProductParams } from "../../state/catalog/slice";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
+
 
 const SearchContainer = styled("div")(({ theme }) => ({
   position: "relative",
@@ -58,18 +59,22 @@ export default function ProductSearch() {
 
   useEffect(() => {
     if (location.pathname !== "/catalog") {
-      setSearchTerm(""); // Clear search term when navigating away from /catalog
+      setSearchTerm("");
     }
-  }, [location]);
+  }, [location.pathname]);
 
-  const handleSearch = (value: string) => {
-    dispatch(setProductParams({ searchTerm: value }));
-    navigate(`/catalog?search=${searchTerm}`);
-  };
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((value: string) => {
+        dispatch(setProductParams({ searchTerm: value }));
+        navigate(`/catalog?search=${value}`);
+      }, 300),
+    [dispatch, navigate]
+  );
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      handleSearch(searchTerm);
+      debouncedSearch(searchTerm);
     }
   };
 
@@ -85,6 +90,7 @@ export default function ProductSearch() {
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
+            debouncedSearch(e.target.value);
           }}
           onKeyPress={handleKeyPress}
         />

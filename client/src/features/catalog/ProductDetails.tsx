@@ -9,7 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { currencyFormat } from "../../app/helpers/utils";
 import NotFound from "../../app/errors/NotFound";
@@ -32,12 +32,16 @@ export default function ProductDetails() {
   const { status: productStatus } = useAppSelector((state) => state.catalog);
   const dispatch = useAppDispatch();
   const { id } = useParams<{ id: string }>();
+
   const product = useAppSelector((state) =>
     productSelectors.selectById(state, parseInt(id!))
   );
-  const [quantity, setQuantity] = useState(0);
 
-  const item = basket?.items.find((i) => i.productId === product?.id);
+  const [quantity, setQuantity] = useState<number | string>(0);
+
+  const item = useMemo(() => {
+    return basket?.items.find((i) => i.productId === product?.id);
+  }, [basket, product]);
 
   useEffect(() => {
     if (item) setQuantity(item.quantity);
@@ -46,8 +50,9 @@ export default function ProductDetails() {
 
   const handleInputChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
-      if (parseInt(event.currentTarget.value) >= 0) {
-        setQuantity(parseInt(event.currentTarget.value));
+      const value = event.currentTarget.value;
+      if (value === "" || parseInt(value) >= 0) {
+        setQuantity(value === "" ? "" : parseInt(value));
       }
     },
     []
@@ -56,8 +61,11 @@ export default function ProductDetails() {
   const handleUpdateCart = useCallback(() => {
     if (!product) return;
 
-    if (!item || quantity > item.quantity) {
-      const updatedQuantity = item ? quantity - item.quantity : quantity;
+    const currentQuantity = typeof quantity === "string" ? parseInt(quantity) : quantity;
+    const itemQuantity = item ? item.quantity : 0;
+    const updatedQuantity = currentQuantity - itemQuantity;
+
+    if (updatedQuantity > 0) {
       dispatch(
         addBasketItemAsync({
           productId: product.id,
@@ -65,11 +73,10 @@ export default function ProductDetails() {
         })
       );
     } else {
-      const updatedQuantity = item.quantity - quantity;
       dispatch(
         removeBasketItemAsync({
           productId: product.id,
-          quantity: updatedQuantity,
+          quantity: Math.abs(updatedQuantity),
         })
       );
     }
@@ -89,21 +96,20 @@ export default function ProductDetails() {
       container
       spacing={{ xs: 2, md: 6 }}
       direction={{ xs: "column", md: "row" }}
+      paddingTop={2}
     >
-      <Grid item xs={6}>
+      <Grid item xs={4} mx={2}>
         <Grid>
           <LoadingButton onClick={handleGoBack}>Go back</LoadingButton>
-          <Grid>
-            <img
-              src={product.pictureUrl}
-              alt={product.name}
-              style={{ width: "100%" }}
-            />
-          </Grid>
         </Grid>
+        <img
+          src={product.pictureUrl}
+          alt={product.name}
+          style={{ width: "300px", height: "300px", objectFit: "cover" }}
+        />
       </Grid>
 
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={6} mx={2}>
         <Typography variant="h5" gutterBottom>
           {product.name}
         </Typography>
@@ -113,7 +119,7 @@ export default function ProductDetails() {
         </Typography>
 
         <TableContainer>
-          <Table sx={{ spacing: 4, backgroundColor: "rgb(247, 247, 247)" }}>
+          <Table sx={{ backgroundColor: "rgb(247, 247, 247)" }}>
             <TableBody>
               <TableRow>
                 <TableCell>Name</TableCell>
@@ -138,6 +144,7 @@ export default function ProductDetails() {
             </TableBody>
           </Table>
         </TableContainer>
+
         <Grid container spacing={2} mt={2}>
           <Grid item xs={4} md={6}>
             <TextField
@@ -151,9 +158,7 @@ export default function ProductDetails() {
           </Grid>
           <Grid item xs={8} md={6}>
             <LoadingButton
-              disabled={
-                item?.quantity === quantity || (!item && quantity === 0)
-              }
+              disabled={item?.quantity === quantity || (!item && quantity === 0)}
               loading={status.includes("pending")}
               onClick={handleUpdateCart}
               sx={{ height: "55px" }}

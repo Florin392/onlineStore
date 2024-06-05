@@ -1,4 +1,8 @@
-import { createTheme, ThemeProvider as MuiThemeProvider } from "@mui/material";
+import {
+  createTheme,
+  ThemeProvider as MuiThemeProvider,
+  Theme,
+} from "@mui/material";
 import { ReactNode, useCallback, useState, createContext } from "react";
 
 interface ThemeProviderType {
@@ -6,6 +10,7 @@ interface ThemeProviderType {
 }
 
 interface ThemeContextType {
+  theme: Theme;
   breakpoints: any;
   darkMode: boolean;
   handleThemeChange: () => void;
@@ -43,9 +48,10 @@ export default function ThemeProvider({ children }: ThemeProviderType) {
   }, []);
 
   const themeContextValue: ThemeContextType = {
+    theme,
     darkMode,
     handleThemeChange,
-    breakpoints: theme.breakpoints, // Include the breakpoints from the theme
+    breakpoints: theme.breakpoints,
   };
 
   return (

@@ -121,12 +121,16 @@ export default function Catalog() {
         <ProductList products={products} />
       </Grid>
 
-      <Grid item xs={3} />
-      <Grid item xs={12} md={isDesktop ? 9 : 12} sx={{ mb: 2 }}>
-        {metaData && (
-          <AppPagination metaData={metaData} onPageChange={handlePageChange} />
-        )}
-      </Grid>
+      {products.length > 0 && (
+        <Grid item xs={12} md={isDesktop ? 9 : 12} sx={{ mb: 2 }}>
+          {metaData && (
+            <AppPagination
+              metaData={metaData}
+              onPageChange={handlePageChange}
+            />
+          )}
+        </Grid>
+      )}
     </Grid>
   );
 }

@@ -9,9 +9,6 @@ export default function NavigationBar() {
   const { handleDrawerToggle } = useDrawer();
   const theme = useTheme();
 
-  const paletteType = theme.palette.mode;
-  const isLightMode = paletteType === "light";
-
   const handleMenuOpen = useCallback(() => {
     if (isDesktop) {
       handleDrawerToggle();
@@ -26,7 +23,8 @@ export default function NavigationBar() {
           width="10rem"
           flexWrap="nowrap"
           sx={{
-            backgroundColor: isLightMode ? "#ffffff" : "#121212",
+            backgroundColor:
+              theme.palette.mode === "light" ? "#ffffff" : "#121212",
           }}
           px={1}
           height="2rem"

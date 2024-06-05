@@ -8,6 +8,7 @@ import {
   TableRow,
   TextField,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -27,6 +28,7 @@ import { fetchProductAsync } from "../../state/catalog/actions";
 
 export default function ProductDetails() {
   const navigate = useNavigate();
+  const theme = useTheme();
   const basket = useAppSelector(basketSelector);
   const status = useAppSelector(statusSelector);
   const { status: productStatus } = useAppSelector((state) => state.catalog);
@@ -61,7 +63,8 @@ export default function ProductDetails() {
   const handleUpdateCart = useCallback(() => {
     if (!product) return;
 
-    const currentQuantity = typeof quantity === "string" ? parseInt(quantity) : quantity;
+    const currentQuantity =
+      typeof quantity === "string" ? parseInt(quantity) : quantity;
     const itemQuantity = item ? item.quantity : 0;
     const updatedQuantity = currentQuantity - itemQuantity;
 
@@ -105,7 +108,14 @@ export default function ProductDetails() {
         <img
           src={product.pictureUrl}
           alt={product.name}
-          style={{ width: "300px", height: "300px", objectFit: "cover" }}
+          style={{
+            maxWidth: "300px",
+            objectFit: "fill",
+            backgroundColor:
+              theme.palette.mode === "dark"
+                ? "rgb(25, 118, 210, 0.1)"
+                : "inherit",
+          }}
         />
       </Grid>
 
@@ -119,7 +129,14 @@ export default function ProductDetails() {
         </Typography>
 
         <TableContainer>
-          <Table sx={{ backgroundColor: "rgb(247, 247, 247)" }}>
+          <Table
+            sx={{
+              backgroundColor:
+                theme.palette.mode === "light"
+                  ? "rgb(247, 247, 247)"
+                  : "inherit",
+            }}
+          >
             <TableBody>
               <TableRow>
                 <TableCell>Name</TableCell>
@@ -158,7 +175,9 @@ export default function ProductDetails() {
           </Grid>
           <Grid item xs={8} md={6}>
             <LoadingButton
-              disabled={item?.quantity === quantity || (!item && quantity === 0)}
+              disabled={
+                item?.quantity === quantity || (!item && quantity === 0)
+              }
               loading={status.includes("pending")}
               onClick={handleUpdateCart}
               sx={{ height: "55px" }}

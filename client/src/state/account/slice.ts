@@ -1,8 +1,10 @@
-import { createSlice, isAnyOf } from "@reduxjs/toolkit";
+import { createSlice, isAnyOf, PayloadAction } from "@reduxjs/toolkit";
 import { AccountState } from "./types";
 import { fetchCurrentUserAsync, signInUserAsync } from "./actions";
 import { router } from "../../AppRoutes";
 import { toast } from "react-toastify";
+import { clearAddress } from "../checkout/slice"; // Import clearAddress action
+import { AppDispatch } from "../store";
 
 const initialState: AccountState = {
   user: null,
@@ -17,7 +19,7 @@ export const accountSlice = createSlice({
       localStorage.removeItem("user");
       router.navigate("/");
     },
-    setUser: (state, action) => {
+    setUser: (state, action: PayloadAction<any>) => {
       const claims = JSON.parse(atob(action.payload.token.split(".")[1]));
       const roles =
         claims["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"];
@@ -55,3 +57,8 @@ export const accountSlice = createSlice({
 });
 
 export const { signOut, setUser } = accountSlice.actions;
+
+export const asyncSignOut = () => (dispatch: AppDispatch) => {
+  dispatch(clearAddress());
+  dispatch(signOut());
+};

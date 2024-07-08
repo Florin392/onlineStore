@@ -13,14 +13,11 @@ using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(config =>
 {
-    // Include 'SecurityScheme' to use JWT Authentication
     var jwtSecurityScheme = new OpenApiSecurityScheme
     {
         BearerFormat = "JWT",
@@ -40,22 +37,16 @@ builder.Services.AddSwaggerGen(config =>
 
     config.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
-        {
-            jwtSecurityScheme,Array.Empty<string>()
-        }
+        { jwtSecurityScheme, Array.Empty<string>() }
     });
 });
-
 
 string connString;
 if (builder.Environment.IsDevelopment())
     connString = builder.Configuration.GetConnectionString("DefaultConnection");
 else
 {
-    // Use connection string provided at runtime by FlyIO.
     var connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-
-    // Parse connection URL to connection string for Npgsql
     connUrl = connUrl.Replace("postgres://", string.Empty);
     var pgUserPass = connUrl.Split("@")[0];
     var pgHostPortDb = connUrl.Split("@")[1];
@@ -90,14 +81,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = false,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.
-            GetBytes(builder.Configuration["JWTSettings:TokenKey"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTSettings:TokenKey"]))
         };
     });
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<PaymentService>();
 builder.Services.AddScoped<ImageService>();
+builder.Services.AddScoped<BasketService>();
 
 var app = builder.Build();
 
@@ -109,7 +100,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI(config =>
     {
-        config.ConfigObject.AdditionalItems.Add("persistAuthorization", "true"); //persist auth in swagger
+        config.ConfigObject.AdditionalItems.Add("persistAuthorization", "true");
     });
 }
 
@@ -117,9 +108,9 @@ app.UseDefaultFiles();
 app.UseStaticFiles();
 
 app.UseCors(opt =>
-    {
-        opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");
-    });
+{
+    opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");
+});
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -138,8 +129,7 @@ try
 }
 catch (Exception ex)
 {
-
-    logger.LogError(ex, "A problem occured during migrations");
+    logger.LogError(ex, "A problem occurred during migrations");
 }
 
 app.Run();

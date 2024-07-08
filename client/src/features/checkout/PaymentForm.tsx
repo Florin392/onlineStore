@@ -1,6 +1,5 @@
-import { Typography, Grid, TextField } from "@mui/material";
-import { useFormContext } from "react-hook-form";
-import AppTextInput from "../../app/components/AppTextInput";
+import { Grid, TextField, Typography } from "@mui/material";
+import { useFormContext, Controller } from "react-hook-form";
 import {
   CardCvcElement,
   CardExpiryElement,
@@ -26,10 +25,12 @@ export default function PaymentForm({ cardState, onCardInputChange }: Props) {
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6}>
-          <AppTextInput
+          <Controller
             name="nameOnCard"
-            label="Name on card"
             control={control}
+            render={({ field }) => (
+              <TextField {...field} label="Name on card" fullWidth />
+            )}
           />
         </Grid>
         <Grid item xs={12} md={6}>

@@ -2,8 +2,10 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { User } from "../../app/models/users";
 import { FieldValues } from "react-hook-form";
 import agent from "../../app/api/agent";
-import { setUser } from "./slice";
-import { setBasket } from "../basket/slice";
+import { setUser, signOut } from "./slice";
+import { clearBasket, setBasket } from "../basket/slice";
+import { clearAddress } from "../checkout/slice";
+import { AppDispatch } from "../store";
 
 export const signInUserAsync = createAsyncThunk<User, FieldValues>(
   "account/signInUser",
@@ -45,5 +47,14 @@ export const fetchCurrentUserAsync = createAsyncThunk<User>(
       if (!localStorage.getItem("user")) return false;
       // if no user key in localstorage, no call in network
     },
+  }
+);
+
+export const asyncSignOut = createAsyncThunk<void, void, { dispatch: AppDispatch }>(
+  "account/asyncSignOut",
+  async (_, { dispatch }) => {
+    dispatch(clearBasket());
+    dispatch(clearAddress());
+    dispatch(signOut());
   }
 );

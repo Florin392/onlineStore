@@ -1,25 +1,29 @@
-import { TextField } from "@mui/material";
-import { UseControllerProps, useController } from "react-hook-form";
+import { TextField, TextFieldProps } from "@mui/material";
+import { Controller, useFormContext } from "react-hook-form";
 
-interface Props extends UseControllerProps {
-  label: string;
-  multiline?: boolean;
-  rows?: number;
-  type?: string;
+interface AppTextInputProps extends Omit<TextFieldProps, "name"> {
+  name: string;
 }
-export default function AppTextInput(props: Props) {
-  const { fieldState, field } = useController({ ...props, defaultValue: "" });
+
+export default function AppTextInput({ name, ...props }: AppTextInputProps) {
+  const { control } = useFormContext();
+
   return (
-    <TextField
-      {...props}
-      {...field}
-      multiline={props.multiline}
-      rows={props.rows}
-      type={props.type}
-      fullWidth
-      variant="outlined"
-      error={!!fieldState.error}
-      helperText={fieldState.error?.message}
+    <Controller
+      name={name}
+      control={control}
+      defaultValue=""
+      render={({ field, fieldState: { error } }) => (
+        <TextField
+          {...field}
+          {...props}
+          value={field.value || ""}
+          error={!!error}
+          helperText={error ? error.message : null}
+          fullWidth
+          variant="outlined"
+        />
+      )}
     />
   );
 }

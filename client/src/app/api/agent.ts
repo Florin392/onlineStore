@@ -130,6 +130,7 @@ const Account = {
   register: (values: any) => requests.post("account/register", values),
   currentUser: () => requests.get("account/currentUser"),
   fetchAddress: () => requests.get("account/savedAddress"),
+  saveAddress: (address: any) => requests.post("account/saveAddress", address),
 };
 
 const Orders = {

@@ -1,44 +1,54 @@
+import { useEffect, useCallback } from "react";
 import { Typography, Grid } from "@mui/material";
-import AppTextInput from "../../app/components/AppTextInput";
 import { useFormContext } from "react-hook-form";
-import AppCheckbox from "../../app/components/AppChecbox";
+import AppCheckbox from "../../app/components/AppCheckbox";
+import AppTextInput from "../../app/components/AppTextInput";
+import { selectAddress } from "../../state/checkout/selectors";
+import { useAppSelector } from "../../app/hooks/useAppSelector";
 
 export default function AddressForm() {
-  const { control, formState } = useFormContext();
+  const { reset } = useFormContext();
+  const address = useAppSelector(selectAddress);
+
+  const initializeForm = useCallback(() => {
+    if (address) {
+      reset(address);
+    }
+  }, [address, reset]);
+
+  useEffect(() => {
+    initializeForm();
+  }, [initializeForm]);
+
   return (
     <>
       <Typography variant="h6" gutterBottom>
         Shipping address
       </Typography>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={12}>
-          <AppTextInput control={control} name="fullName" label="Full name" />
+        <Grid item xs={12} sm={6}>
+          <AppTextInput name="fullName" label="Full Name" />
         </Grid>
         <Grid item xs={12}>
-          <AppTextInput control={control} name="address1" label="Address 1" />
+          <AppTextInput name="address1" label="Address Line 1" />
         </Grid>
         <Grid item xs={12}>
-          <AppTextInput control={control} name="address2" label="Address 2" />
+          <AppTextInput name="address2" label="Address Line 2" />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <AppTextInput control={control} name="city" label="City" />
+          <AppTextInput name="city" label="City" />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <AppTextInput control={control} name="state" label="State" />
+          <AppTextInput name="state" label="State" />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <AppTextInput control={control} name="zip" label="Zipcode" />
+          <AppTextInput name="zip" label="ZIP / Postal code" />
         </Grid>
         <Grid item xs={12} sm={6}>
-          <AppTextInput control={control} name="country" label="Country" />
+          <AppTextInput name="country" label="Country" />
         </Grid>
         <Grid item xs={12}>
-          <AppCheckbox
-            disabled={!formState.isDirty}
-            name="saveAddress"
-            label="Save this as default address"
-            control={control}
-          />
+          <AppCheckbox name="saveAddress" label="Save this address" />
         </Grid>
       </Grid>
     </>

@@ -10,6 +10,7 @@ namespace API.RequestHelpers
         {
             CreateMap<CreateProductDto, Product>();
             CreateMap<UpdateProductDto, Product>();
+            CreateMap<UserAddress, AddressDto>().ReverseMap();
         }
     }
 }

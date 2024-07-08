@@ -2,12 +2,11 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Fade from "@mui/material/Fade";
-import { useAppDispatch } from "../../app/hooks/useAppDispatch";
 import { Link } from "react-router-dom";
-import { signOut } from "../../state/account/slice";
-import { clearBasket } from "../../state/basket/slice";
-import { useCallback, useState } from "react";
 import { AccountCircle } from "@mui/icons-material";
+import { useCallback, useState } from "react";
+import { asyncSignOut } from "../../state/account/actions"; 
+import { useAppDispatch } from "../../app/hooks/useAppDispatch"; 
 
 export default function UserLogedIn() {
   const dispatch = useAppDispatch();
@@ -23,8 +22,7 @@ export default function UserLogedIn() {
   }, []);
 
   const handleLogOut = useCallback(() => {
-    dispatch(clearBasket());
-    dispatch(signOut());
+    dispatch(asyncSignOut());
   }, [dispatch]);
 
   return (

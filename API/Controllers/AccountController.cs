@@ -15,11 +15,14 @@ namespace API.Controllers
         private readonly UserManager<User> _userManager;
         private readonly TokenService _tokenService;
         private readonly StoreContext _context;
-        public AccountController(UserManager<User> userManager, TokenService tokenService, StoreContext context)
+        private readonly BasketService _basketService;
+
+        public AccountController(UserManager<User> userManager, TokenService tokenService, StoreContext context, BasketService basketService)
         {
             _context = context;
             _tokenService = tokenService;
             _userManager = userManager;
+            _basketService = basketService;
         }
 
         [HttpPost("login")]
@@ -29,8 +32,8 @@ namespace API.Controllers
             if (user == null || !await _userManager.CheckPasswordAsync(user, loginDto.Password))
                 return Unauthorized();
 
-            var userBasket = await RetrieveBasket(loginDto.Username);
-            var anonBasket = await RetrieveBasket(Request.Cookies["buyerId"]);
+            var userBasket = await _basketService.RetrieveBasket(loginDto.Username);
+            var anonBasket = await _basketService.RetrieveBasket(Request.Cookies["buyerId"]);
 
             if (anonBasket != null)
             {
@@ -39,7 +42,6 @@ namespace API.Controllers
                 Response.Cookies.Delete("buyerId");
                 await _context.SaveChangesAsync();
             }
-
 
             return new UserDto
             {
@@ -76,7 +78,7 @@ namespace API.Controllers
         public async Task<ActionResult<UserDto>> GetCurrentUser()
         {
             var user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var userBasket = await RetrieveBasket(User.Identity.Name);
+            var userBasket = await _basketService.RetrieveBasket(User.Identity.Name);
 
             return new UserDto
             {
@@ -90,26 +92,26 @@ namespace API.Controllers
         [HttpGet("savedAddress")]
         public async Task<ActionResult<UserAddress>> GetSavedAddress()
         {
-            // use projection to project user address
             return await _userManager.Users
                 .Where(x => x.UserName == User.Identity.Name)
                 .Select(user => user.Address)
                 .FirstOrDefaultAsync();
         }
 
-        private async Task<Basket> RetrieveBasket(string buyerId)
+        [Authorize]
+        [HttpPost("saveAddress")]
+        public async Task<ActionResult<UserAddress>> SaveAddress(UserAddress address)
         {
-            if (string.IsNullOrEmpty(buyerId))
-            {
-                Response.Cookies.Delete("buyerId");
-                return null;
-            }
+            var user = await _userManager.Users
+                .Include(u => u.Address)
+                .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
 
-            return await _context.Baskets
-                .Include(i => i.Items)
-                .ThenInclude(p => p.Product)
-                .FirstOrDefaultAsync(x => x.BuyerId == buyerId);
+            if (user == null) return NotFound();
+
+            user.Address = address;
+            await _context.SaveChangesAsync();
+
+            return Ok(user.Address);
         }
     }
-
 }

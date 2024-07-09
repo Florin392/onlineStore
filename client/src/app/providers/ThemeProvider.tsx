@@ -21,7 +21,7 @@ export const ThemeContext = createContext<ThemeContextType | undefined>(
 );
 
 export default function ThemeProvider({ children }: ThemeProviderType) {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
 
   const paletteType = darkMode ? "dark" : "light";
 
@@ -30,6 +30,12 @@ export default function ThemeProvider({ children }: ThemeProviderType) {
       mode: paletteType,
       background: {
         default: paletteType === "light" ? "#eeee" : "#121212",
+      },
+      primary: {
+        main: paletteType === "light" ? "#1976d2" : "#90caf9",
+      },
+      text: {
+        primary: paletteType === "light" ? "#000" : "#fff",
       },
     },
     breakpoints: {

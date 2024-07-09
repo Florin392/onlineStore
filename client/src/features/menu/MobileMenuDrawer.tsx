@@ -42,6 +42,7 @@ export default function MobileMenuDrawer({ handleDrawerToggle }: Props) {
             to={path}
             disablePadding
             sx={navStyles}
+            onClick={handleDrawerToggle}
           >
             <ListItemButton sx={{ textAlign: "center" }}>
               <ListItemText primary={title.toUpperCase()} />

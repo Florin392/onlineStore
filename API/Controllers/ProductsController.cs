@@ -12,13 +12,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
 {
-
     public class ProductsController : BaseApiController
     {
         private readonly IMapper _mapper;
         private readonly ImageService _imageService;
-
         private readonly StoreContext _context;
+
         public ProductsController(StoreContext context, IMapper mapper, ImageService imageService)
         {
             _imageService = imageService;
@@ -27,25 +26,22 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PagedList<Product>>> GetProducts(
-           [FromQuery] ProductParams productParams)
+        public async Task<ActionResult<PagedList<Product>>> GetProducts([FromQuery] ProductParams productParams)
         {
             var query = _context.Products
-            .Sort(productParams.OrderBy)
-            .Search(productParams.SearchTerm)
-            .Filter(productParams.Brands, productParams.Types)
-            .AsQueryable();
+                .Sort(productParams.OrderBy)
+                .Search(productParams.SearchTerm)
+                .Filter(productParams.Brands, productParams.Types)
+                .AsQueryable();
 
-            var products = await PagedList<Product>.ToPagedList(query,
-            productParams.PageNumber, productParams.PageSize);
+            var products = await PagedList<Product>.ToPagedList(query, productParams.PageNumber, productParams.PageSize);
 
             Response.AddPaginationHeader(products.MetaData);
 
             return products;
         }
 
-
-        [HttpGet("{id}", Name = "GetProduct")] // api/products/3
+        [HttpGet("{id}", Name = "GetProduct")]
         public async Task<ActionResult<Product>> GetProduct(int id)
         {
             var product = await _context.Products.FindAsync(id);
@@ -97,10 +93,9 @@ namespace API.Controllers
             }
 
             _context.Products.Add(product);
-
             var result = await _context.SaveChangesAsync() > 0;
 
-            if (result) return CreatedAtRoute("GetProduct", new { Id = product.Id }, product);
+            if (result) return CreatedAtRoute("GetProduct", new { id = product.Id }, product);
 
             return BadRequest(new ProblemDetails { Title = "Problem creating new product" });
         }
@@ -117,19 +112,16 @@ namespace API.Controllers
 
             if (productDto.File != null)
             {
-                // upload image
                 var imageResult = await _imageService.AddImageAsync(productDto.File);
-                // if any problem, return a badRequest
+
                 if (imageResult.Error != null)
                     return BadRequest(new ProblemDetails { Title = imageResult.Error.Message });
 
-                // delete de img from cloudinary (if we have one) when upload a new one
                 if (!string.IsNullOrEmpty(product.PublicId))
                     await _imageService.DeleteImageAsync(product.PublicId);
 
                 product.PictureUrl = imageResult.SecureUrl.ToString();
                 product.PublicId = imageResult.PublicId;
-
             }
 
             var result = await _context.SaveChangesAsync() > 0;
@@ -151,14 +143,11 @@ namespace API.Controllers
                 await _imageService.DeleteImageAsync(product.PublicId);
 
             _context.Products.Remove(product);
-
             var result = await _context.SaveChangesAsync() > 0;
 
             if (result) return Ok();
 
             return BadRequest(new ProblemDetails { Title = "Problem deleting product" });
         }
-
-
     }
 }

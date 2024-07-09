@@ -16,7 +16,7 @@ export default function GradientNavBar() {
             zIndex: "-1",
 
             background:
-              "-webkit-linear-gradient(right, #ff1d25 5%, #a0328c 35%, #7040a4 45%, #4359c7 55%, #0082e6 70%)",
+              "linear-gradient(to right, #98FB98, #228B22)",
           }}
         />
       ) : (
@@ -28,7 +28,7 @@ export default function GradientNavBar() {
             top: "3rem",
             zIndex: "-1",
             background:
-              "-webkit-linear-gradient(right, #ff1d25 5%, #a0328c 35%, #7040a4 45%, #4359c7 55%, #0082e6 70%)",
+              "linear-gradient(to right, #98FB98, #228B22)",
           }}
         />
       )}

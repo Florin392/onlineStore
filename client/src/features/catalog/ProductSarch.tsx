@@ -8,7 +8,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 
-
 const SearchContainer = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: theme.shape.borderRadius,
@@ -79,7 +78,7 @@ export default function ProductSearch() {
   };
 
   return (
-    <Grid component={Paper} width="auto" borderRadius={4}>
+    <Grid component={Paper} width="auto" borderRadius={4} ml={1}>
       <SearchContainer>
         <SearchIconWrapper>
           <SearchIcon />

@@ -82,9 +82,9 @@ export default function SliderComponent({
   };
 
   const images = [
-    { src: "/images/hero1.jpg", alt: "hero1" },
-    { src: "/images/hero2.jpg", alt: "hero2" },
-    { src: "/images/hero3.jpg", alt: "hero3" },
+    { src: "/images/slider3.jpg", alt: "slider3" },
+    { src: "/images/slider2.jpg", alt: "slider2" },
+    { src: "/images/slider1.jpg", alt: "slider1" },
   ];
 
   return (

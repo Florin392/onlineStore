@@ -22,6 +22,7 @@ import AccountHover from "./AccountHover";
 import SignedInMenu from "../account/UserLogedIn";
 import MobileMenuDrawer from "../menu/MobileMenuDrawer";
 import useIsDesktop from "../../app/hooks/useIsDesktop";
+import { useTheme } from "../../app/hooks/useTheme";
 
 const drawerWidth = 240;
 
@@ -35,10 +36,19 @@ export default function Header() {
     0
   );
   const isDesktop = useIsDesktop();
+  const { darkMode } = useTheme();
 
   return (
     <>
-      <AppBar position="static" style={{ height: isDesktop ? "4rem" : "3rem" }}>
+      <AppBar
+        position="static"
+        style={{
+          height: isDesktop ? "4rem" : "3rem",
+          background: darkMode
+            ? "#121212"
+            : "linear-gradient(to right, #D3D3D3, #A9A9A9)",
+        }}
+      >
         <Grid
           container
           item

@@ -122,10 +122,11 @@ var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<StoreContext>();
 var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
 var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
 try
 {
     await context.Database.MigrateAsync();
-    await DbInitializer.Initialize(context, userManager);
+    await DbInitializer.Initialize(context, userManager, configuration);
 }
 catch (Exception ex)
 {

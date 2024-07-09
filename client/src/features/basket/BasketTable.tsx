@@ -12,7 +12,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { currencyFormat } from "../../app/helpers/utils";
+import { currencyFormat, getImageUrl } from "../../app/helpers/utils";
 import {
   removeBasketItemAsync,
   addBasketItemAsync,
@@ -53,15 +53,18 @@ export default function BasketTable({ items, isBasket = true }: Props) {
               <TableCell component="th" scope="row">
                 <Box display="flex" alignItems="center">
                   <img
-                    src={item.pictureUrl}
+                    src={getImageUrl(item.pictureUrl)}
                     alt={item.name}
-                    style={{ height: 50, marginRight: 20 }}
+                    style={{
+                      width: "15%",
+                      marginRight: 20,
+                    }}
                   />
                   <span>{item.name}</span>
                 </Box>
               </TableCell>
               <TableCell align="right">{currencyFormat(item.price)}</TableCell>
-              <TableCell align="center">
+              <TableCell align="center" width="20%">
                 {isBasket && (
                   <LoadingButton
                     loading={
@@ -143,14 +146,14 @@ export default function BasketTable({ items, isBasket = true }: Props) {
           >
             <Grid container xs={2} justifyContent="center">
               <img
-                src={item.pictureUrl}
+                src={getImageUrl(item.pictureUrl)}
                 alt={item.name}
                 style={{ height: 70 }}
               />
             </Grid>
 
             <Grid container xs={10} alignSelf="start">
-              <Grid item xs={12}>
+              <Grid>
                 <Typography pl={2} gutterBottom>
                   Product name: {item.name}
                 </Typography>
@@ -160,7 +163,7 @@ export default function BasketTable({ items, isBasket = true }: Props) {
                   <Typography pl={2} gutterBottom variant="subtitle2">
                     Brand: {item.brand}
                   </Typography>
-                  <Grid>
+                  <Grid item xs={12}>
                     {isBasket && (
                       <LoadingButton
                         loading={

@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Grid, Paper, Button } from "@mui/material";
+import { Grid, Paper, Button, Typography } from "@mui/material";
 import { useAppDispatch } from "../../app/hooks/useAppDispatch";
 import { useAppSelector } from "../../app/hooks/useAppSelector";
 import LoadingPage from "../../app/components/LoadingComponent";
@@ -62,6 +62,9 @@ export default function Catalog() {
             />
           </Paper>
           <Paper sx={{ mb: 2, p: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Brands
+            </Typography>
             <CheckboxButtons
               items={brands}
               checked={productParams.brands}
@@ -69,6 +72,9 @@ export default function Catalog() {
             />
           </Paper>
           <Paper sx={{ mb: 2, p: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Types
+            </Typography>
             <CheckboxButtons
               items={types}
               checked={productParams.types}
@@ -79,7 +85,7 @@ export default function Catalog() {
       )}
 
       {!isDesktop && (
-        <Grid item xs={12} sx={{ mb: 2 }}>
+        <Grid item xs={12} mb={2} ml={2}>
           <Button variant="contained" onClick={toggleFiltersVisibility}>
             {filtersVisible ? "Hide Filters" : "Show Filters"}
           </Button>
@@ -96,6 +102,10 @@ export default function Catalog() {
             />
           </Paper>
           <Paper sx={{ mb: 2, p: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Brands:
+            </Typography>
+
             <CheckboxButtons
               items={brands}
               checked={productParams.brands}
@@ -103,6 +113,9 @@ export default function Catalog() {
             />
           </Paper>
           <Paper sx={{ mb: 2, p: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Types:
+            </Typography>
             <CheckboxButtons
               items={types}
               checked={productParams.types}
@@ -117,12 +130,12 @@ export default function Catalog() {
         </Grid>
       )}
 
-      <Grid item xs={12} md={isDesktop ? 9 : 12}>
+      <Grid item xs={12} md={9} mt={2}>
         <ProductList products={products} />
       </Grid>
 
       {products.length > 0 && (
-        <Grid item xs={12} md={isDesktop ? 9 : 12} sx={{ mb: 2 }}>
+        <Grid item xs={12} md={9} sx={{ mb: 2 }}>
           {metaData && (
             <AppPagination
               metaData={metaData}

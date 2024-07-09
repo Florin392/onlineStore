@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { currencyFormat } from "../../app/helpers/utils";
+import { currencyFormat, getImageUrl } from "../../app/helpers/utils";
 import NotFound from "../../app/errors/NotFound";
 import LoadingPage from "../../app/components/LoadingComponent";
 import { LoadingButton } from "@mui/lab";
@@ -94,6 +94,8 @@ export default function ProductDetails() {
 
   if (!product) return <NotFound />;
 
+  const imageUrl = getImageUrl(product.pictureUrl);
+
   return (
     <Grid
       container
@@ -105,18 +107,35 @@ export default function ProductDetails() {
         <Grid>
           <LoadingButton onClick={handleGoBack}>Go back</LoadingButton>
         </Grid>
-        <img
-          src={product.pictureUrl}
-          alt={product.name}
-          style={{
-            maxWidth: "300px",
-            objectFit: "fill",
-            backgroundColor:
-              theme.palette.mode === "dark"
-                ? "rgb(25, 118, 210, 0.1)"
-                : "inherit",
-          }}
-        />
+        {product && (
+          <div
+            style={{
+              width: "100%",
+              height: "400px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <img
+              src={imageUrl}
+              alt={product.name}
+              style={{
+                maxWidth: "100%",
+                maxHeight: "100%",
+                objectFit: "contain",
+                backgroundColor:
+                  theme.palette.mode === "dark"
+                    ? "rgb(25, 118, 210, 0.1)"
+                    : "inherit",
+                borderRadius: theme.shape.borderRadius,
+              }}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = "/images/placeholder.png";
+              }}
+            />
+          </div>
+        )}
       </Grid>
 
       <Grid item xs={12} md={6} mx={2}>

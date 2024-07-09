@@ -9,7 +9,7 @@ import {
 
 export default function ProductCardSkeleton() {
   return (
-    <Grid item xs component={Card}>
+    <Grid item xs component={Card} sx={{ maxWidth: 345, height: "100%" }}>
       <CardHeader
         avatar={
           <Skeleton
@@ -28,7 +28,14 @@ export default function ProductCardSkeleton() {
           />
         }
       />
-      <Skeleton sx={{ height: 190 }} animation="wave" variant="rectangular" />
+      <Skeleton
+        sx={{
+          height: { xs: 150, md: 250 },
+          backgroundSize: "contain",
+        }}
+        animation="wave"
+        variant="rectangular"
+      />
       <CardContent>
         <>
           <Skeleton animation="wave" height={10} style={{ marginBottom: 6 }} />

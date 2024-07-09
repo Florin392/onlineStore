@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Card,
   CardActions,
   CardContent,
@@ -9,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Product } from "../../app/models/products";
-import { currencyFormat } from "../../app/helpers/utils";
+import { currencyFormat, getImageUrl } from "../../app/helpers/utils";
 import { Link } from "react-router-dom";
 import { useCallback } from "react";
 import { LoadingButton } from "@mui/lab";
@@ -25,6 +24,7 @@ interface Props {
 
 export default function ProductCard({ product }: Props) {
   const status = useAppSelector(statusSelector);
+  const imageUrl = getImageUrl(product.pictureUrl);
   const dispatch = useAppDispatch();
 
   const handleAddItem = useCallback(() => {
@@ -49,14 +49,9 @@ export default function ProductCard({ product }: Props) {
           sx={{ textDecoration: "none" }}
         >
           <CardHeader
-            sx={{ height: 100 }}
-            avatar={
-              <Avatar sx={{ bgcolor: "secondary.main" }}>
-                {product.name ? product.name.charAt(0).toUpperCase() : ""}
-              </Avatar>
-            }
+            sx={{ height: "40px", my: "5px" }}
             subheader={
-              <Typography variant="subtitle1" color="primary.main" gutterBottom>
+              <Typography variant="subtitle1" color="text.primary" gutterBottom>
                 {product.name}
               </Typography>
             }
@@ -68,11 +63,21 @@ export default function ProductCard({ product }: Props) {
               backgroundSize: "contain",
               bgcolor: "primary.light",
             }}
-            image={product.pictureUrl}
-            title={product.name}
-          />
+          >
+            <img
+              src={imageUrl}
+              alt={product.name}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+                backgroundColor: "#f5f5f5",
+              }}
+            />
+          </CardMedia>
+
           <CardContent>
-            <Grid>
+            <Grid flexGrow={1}>
               <Typography color="text.primary" gutterBottom>
                 {currencyFormat(product.price)}
               </Typography>
@@ -89,7 +94,10 @@ export default function ProductCard({ product }: Props) {
             size="small"
             variant="contained"
             color="primary"
-            sx={{ mr: 1 }}
+            style={{
+              backgroundColor: "#D3D3D3",
+            }}
+            sx={{ mr: 1, mb: 2 }}
           >
             Add to Cart
           </LoadingButton>

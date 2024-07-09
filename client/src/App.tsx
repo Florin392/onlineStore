@@ -48,7 +48,7 @@ export default function App() {
             <Container sx={{ paddingX: isDesktop ? "auto" : "0" }}>
               <Outlet />
             </Container>
-            <Grid container justifySelf="end" >
+            <Grid container justifySelf="end">
               <Footer />
             </Grid>
           </>

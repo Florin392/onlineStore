@@ -7,7 +7,7 @@ import {
 } from "./actions";
 import { Product } from "../../app/models/products";
 import { RootState } from "../store";
-import { CatalogState } from "./types"; // Import Category
+import { CatalogState } from "./types"; 
 
 const productsAdapter = createEntityAdapter<Product>();
 
@@ -27,7 +27,7 @@ const initialState: CatalogState = {
   status: "idle",
   brands: [],
   types: [],
-  categories: [], // Correct type for categories
+  categories: [], 
   productParams: initParams(),
   metaData: null,
 };

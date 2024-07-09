@@ -11,7 +11,7 @@ import {
   Box,
 } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
-import { currencyFormat } from "../../app/helpers/utils";
+import { currencyFormat, getImageUrl } from "../../app/helpers/utils";
 import useProducts from "../../app/hooks/useProducts";
 import AppPagination from "../../app/components/AppPagination";
 import { useAppDispatch } from "../../app/hooks/useAppDispatch";
@@ -104,9 +104,9 @@ export default function Inventory() {
                 <TableCell align="left">
                   <Box display="flex" alignItems="center">
                     <img
-                      src={product.pictureUrl}
+                      src={getImageUrl(product.pictureUrl)}
                       alt={product.name}
-                      style={{ height: 50, marginRight: 20 }}
+                      style={{ height: 60, width: 60, marginRight: 20 }}
                     />
                     <span>{product.name}</span>
                   </Box>

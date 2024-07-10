@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(StoreContext))]
-    [Migration("20240422081455_PublicIdAdded")]
-    partial class PublicIdAdded
+    [Migration("20240710091042_ChangeDatabaseProducts")]
+    partial class ChangeDatabaseProducts
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -294,6 +294,9 @@ namespace API.Data.Migrations
 
                     b.Property<string>("FullName")
                         .HasColumnType("text");
+
+                    b.Property<bool>("SaveAddress")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("State")
                         .HasColumnType("text");

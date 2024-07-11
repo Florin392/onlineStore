@@ -8,12 +8,12 @@ primary_region = 'mad'
 
 [build]
   image = 'florin392/onlinestore:latest'
+  StripeSettings__PublishableKey="pk_test_51P5m7OIK8MifvEPJbFmw4evKE5olsLCjNhgBe3Ne11foLMKLnnDxWVCkvrERxnRVl9a2qB2lfilAg15l3hzgUNdv00bUBrcvCn"
+  Cloudinary__CloudName="dphwki2ye"
+  Cloudinary__ApiKey="296927463671218"
 
 [env]
-  ASPNETCORE_URL = 'http://+:8080'
-  Cloudinary__ApiKey = '296927463671218'
-  Cloudinary__CloudName = 'dphwki2ye'
-  StripeSettings__PublishableKey = 'pk_test_51P5m7OIK8MifvEPJbFmw4evKE5olsLCjNhgBe3Ne11foLMKLnnDxWVCkvrERxnRVl9a2qB2lfilAg15l3hzgUNdv00bUBrcvCn'
+  ASPNETCORE_URL="http://+:8080"
 
 [http_service]
   internal_port = 8080
@@ -22,6 +22,5 @@ primary_region = 'mad'
   auto_start_machines = true
   min_machines_running = 0
   processes = ['app']
-
 [[vm]]
   size = 'shared-cpu-1x'

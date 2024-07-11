@@ -1,4 +1,4 @@
-# fly.toml app configuration file generated for online-shop on 2024-07-11T12:47:20+02:00
+# fly.toml app configuration file generated for online-shop on 2024-07-11T16:24:23+02:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
@@ -8,12 +8,12 @@ primary_region = 'mad'
 
 [build]
   image = 'florin392/onlinestore:latest'
-  
+
 [env]
-  ASPNETCORE_URL="http://+:8080"
-  StripeSettings__PublishableKey="pk_test_51P5m7OIK8MifvEPJbFmw4evKE5olsLCjNhgBe3Ne11foLMKLnnDxWVCkvrERxnRVl9a2qB2lfilAg15l3hzgUNdv00bUBrcvCn"
-  Cloudinary__CloudName="dphwki2ye"
-  Cloudinary__ApiKey="296927463671218"
+  ASPNETCORE_URL = 'http://+:8080'
+  Cloudinary__ApiKey = '296927463671218'
+  Cloudinary__CloudName = 'dphwki2ye'
+  StripeSettings__PublishableKey = 'pk_test_51P5m7OIK8MifvEPJbFmw4evKE5olsLCjNhgBe3Ne11foLMKLnnDxWVCkvrERxnRVl9a2qB2lfilAg15l3hzgUNdv00bUBrcvCn'
 
 [http_service]
   internal_port = 8080

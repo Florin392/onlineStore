@@ -20,7 +20,7 @@ export default function HomePage() {
         <Typography
           sx={{ fontSize: isDektop ? "38px" : "18px", color: "grey" }}
         >
-          work in progress...
+          work in progress..
         </Typography>
       </Grid>
     </Grid>

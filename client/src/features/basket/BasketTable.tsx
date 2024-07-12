@@ -12,7 +12,7 @@ import {
   Grid,
   Typography,
 } from "@mui/material";
-import { currencyFormat, getImageUrl } from "../../app/helpers/utils";
+import { currencyFormat } from "../../app/helpers/utils";
 import {
   removeBasketItemAsync,
   addBasketItemAsync,
@@ -53,7 +53,7 @@ export default function BasketTable({ items, isBasket = true }: Props) {
               <TableCell component="th" scope="row">
                 <Box display="flex" alignItems="center">
                   <img
-                    src={getImageUrl(item.pictureUrl)}
+                    src={item.pictureUrl}
                     alt={item.name}
                     style={{
                       width: "15%",
@@ -146,7 +146,7 @@ export default function BasketTable({ items, isBasket = true }: Props) {
           >
             <Grid container xs={2} justifyContent="center">
               <img
-                src={getImageUrl(item.pictureUrl)}
+                src={item.pictureUrl}
                 alt={item.name}
                 style={{ height: 70 }}
               />

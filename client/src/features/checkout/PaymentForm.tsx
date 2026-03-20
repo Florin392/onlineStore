@@ -40,13 +40,23 @@ export default function PaymentForm({ cardState, onCardInputChange }: Props) {
             helperText={cardState.elementError.cardNumber}
             id="cardNumber"
             label="Card number"
+            style={{ color: "white" }}
             fullWidth
             autoComplete="cc-number"
             variant="outlined"
             InputLabelProps={{ shrink: true }}
             InputProps={{
               inputComponent: StripeInput,
-              inputProps: { component: CardNumberElement },
+              inputProps: {
+                component: CardNumberElement,
+                options: {
+                  style: {
+                    base: {
+                      color: "white",
+                    },
+                  },
+                },
+              },
             }}
           />
         </Grid>
@@ -63,7 +73,16 @@ export default function PaymentForm({ cardState, onCardInputChange }: Props) {
             InputLabelProps={{ shrink: true }}
             InputProps={{
               inputComponent: StripeInput,
-              inputProps: { component: CardExpiryElement },
+              inputProps: {
+                component: CardExpiryElement,
+                options: {
+                  style: {
+                    base: {
+                      color: "white",
+                    },
+                  },
+                },
+              },
             }}
           />
         </Grid>
@@ -80,7 +99,16 @@ export default function PaymentForm({ cardState, onCardInputChange }: Props) {
             InputLabelProps={{ shrink: true }}
             InputProps={{
               inputComponent: StripeInput,
-              inputProps: { component: CardCvcElement },
+              inputProps: {
+                component: CardCvcElement,
+                options: {
+                  style: {
+                    base: {
+                      color: "white",
+                    },
+                  },
+                },
+              },
             }}
           />
         </Grid>

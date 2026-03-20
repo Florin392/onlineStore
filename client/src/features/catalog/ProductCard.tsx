@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Product } from "../../app/models/products";
-import { currencyFormat } from "../../app/helpers/utils";
+import { currencyFormat, getImageUrl } from "../../app/helpers/utils";
 import { Link } from "react-router-dom";
 import { useCallback } from "react";
 import { LoadingButton } from "@mui/lab";
@@ -25,6 +25,7 @@ interface Props {
 export default function ProductCard({ product }: Props) {
   const status = useAppSelector(statusSelector);
   const dispatch = useAppDispatch();
+  const imageUrl = getImageUrl(product.pictureUrl);
 
   const handleAddItem = useCallback(() => {
     dispatch(addBasketItemAsync({ productId: product.id }));
@@ -64,7 +65,7 @@ export default function ProductCard({ product }: Props) {
             }}
           >
             <img
-              src={product.pictureUrl}
+              src={imageUrl}
               alt={product.name}
               style={{
                 width: "100%",

@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { currencyFormat } from "../../app/helpers/utils";
+import { currencyFormat, getImageUrl } from "../../app/helpers/utils";
 import NotFound from "../../app/errors/NotFound";
 import LoadingPage from "../../app/components/LoadingComponent";
 import { LoadingButton } from "@mui/lab";
@@ -94,6 +94,8 @@ export default function ProductDetails() {
 
   if (!product) return <NotFound />;
 
+  const imageUrl = getImageUrl(product.pictureUrl);
+
   return (
     <Grid
       container
@@ -116,7 +118,7 @@ export default function ProductDetails() {
             }}
           >
             <img
-              src={product.pictureUrl}
+              src={imageUrl}
               alt={product.name}
               style={{
                 maxWidth: "100%",
